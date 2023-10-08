@@ -77,16 +77,9 @@
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "bookings-reviews:build"
-          }
-        },
-        "test": {
-					"builder": "@angular-builders/jest:run",
+					"builder": "@angular-devkit/build-angular:extract-i18n",
 					"options": {
-						"polyfills": ["zone.js", "zone.js/testing"],
-						"tsConfig": "tsconfig.spec.json"
+						"browserTarget": "bookings-reviews:build"
 					}
 				}
       }
