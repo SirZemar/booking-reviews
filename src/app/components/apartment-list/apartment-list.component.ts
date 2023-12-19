@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApartmentService } from '../services/apartment/apartment.service';
+import { ApartmentService } from '../../services/apartment/apartment.service';
 import { CommonModule } from '@angular/common';
 import { ApartmentItemComponent } from '../apartment-item/apartment-item.component';
 // import { Apartment } from 'path-to-your-apartment-model'; // Update with the actual path to your model
