@@ -1,0 +1,25 @@
+<mat-card>
+  <mat-card-content [ngStyle]="{ display: 'flex' }">
+    <mat-card-title-group>
+      <mat-card-title>{{ apartment.id }}</mat-card-title>
+      <mat-card-subtitle>{{ apartment.id }}</mat-card-subtitle>
+    </mat-card-title-group>
+
+    <div class="card__content__ratings">
+      <span class="card__content__ratings__current">{{
+        apartment.reviewsRatingAverage | number : '1.1-1'
+      }}</span>
+      <div class="card__content__ratings__target">
+        <mat-icon [ngStyle]="{ color: 'green' }">trending_up</mat-icon>
+        <span>24</span>
+      </div>
+    </div>
+
+    <button
+      class="small-icon-button"
+      mat-icon-button
+      aria-label="Example icon button with a vertical three dot icon">
+      <mat-icon [ngStyle]="{ scale: '1' }">more_vert</mat-icon>
+    </button>
+  </mat-card-content>
+</mat-card>

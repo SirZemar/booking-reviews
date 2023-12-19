@@ -1,10 +1,26 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" (reset)="onReset()" data-testId="search-form">
-    <mat-form-field class="search-bar" data-testId="search-form-field">
-    <mat-label class="search-bar__label" data-testId="search-form-label">{{label}}</mat-label>
-    <input formControlName="bookingUrl" class="search-bar__input" data-testId="search-form-input" matInput type="text">
-    <button type="reset" class="search-bar__close-button" data-testId="search-form-close-button" matSuffix mat-icon-button
-        aria-label="Clear">
-        <mat-icon>close</mat-icon>
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  (reset)="onReset()"
+  data-testId="search-form">
+  <mat-form-field class="search-bar" data-testId="search-form-field">
+    <mat-label class="search-bar__label" data-testId="search-form-label">{{
+      label
+    }}</mat-label>
+    <input
+      formControlName="bookingUrl"
+      class="search-bar__input"
+      data-testId="search-form-input"
+      matInput
+      type="text" />
+    <button
+      type="reset"
+      class="search-bar__close-button"
+      data-testId="search-form-close-button"
+      matSuffix
+      mat-icon-button
+      aria-label="Clear">
+      <mat-icon>close</mat-icon>
     </button>
-</mat-form-field>
+  </mat-form-field>
 </form>

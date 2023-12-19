@@ -21,5 +21,9 @@
 	"peacock.color": "#003B95",
 	"editor.formatOnSave": true,
 	"editor.formatOnSaveMode": "modifications",
-	"editor.defaultFormatter": "esbenp.prettier-vscode"
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"prettier.configPath": ".prettierrc.json",
+	"[html]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	}
 }

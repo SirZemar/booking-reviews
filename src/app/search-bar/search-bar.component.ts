@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ViewChild,
+	inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import {
@@ -26,7 +31,7 @@ import { MatIconModule } from '@angular/material/icon';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchBarComponent {
-	label = 'Booking Url';
+	label = 'Booking Page Name';
 	@ViewChild(FormGroupDirective)
 	private formDir!: FormGroupDirective;
 
@@ -36,8 +41,15 @@ export class SearchBarComponent {
 
 	constructor(private fb: FormBuilder) {}
 
-	onSubmit() {
-		this.formDir.resetForm();
+	async onSubmit() {
+		const pageName = this.form.value.bookingUrl;
+
+		if (pageName) {
+			// const reviewRates = await getReviewRates(pageName);
+			// console.log(reviewRates);
+
+			this.formDir.resetForm();
+		}
 	}
 
 	onReset() {

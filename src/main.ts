@@ -4,9 +4,11 @@ import { importProvidersFrom } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './app/app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideHttpClient } from '@angular/common/http';
 
 bootstrapApplication(AppComponent, {
 	providers: [
+		provideHttpClient(),
 		importProvidersFrom(RouterModule.forRoot(appRoutes)),
 		importProvidersFrom(BrowserAnimationsModule),
 	],
