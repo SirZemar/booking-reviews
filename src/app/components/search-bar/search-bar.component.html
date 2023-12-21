@@ -8,7 +8,8 @@
       label
     }}</mat-label>
     <input
-      formControlName="bookingUrl"
+      (input)="onSearch()"
+      formControlName="apartmentId"
       class="search-bar__input"
       data-testId="search-form-input"
       matInput

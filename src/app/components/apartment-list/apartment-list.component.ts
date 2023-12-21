@@ -18,5 +18,5 @@ export class ApartmentListComponent {
   http = inject(HttpClient);
   apartmentService = inject(ApartmentService);
 
-  apartments$ = this.apartmentService.getApartments();
+  apartments$ = this.apartmentService.getFilteredApartments();
 }
