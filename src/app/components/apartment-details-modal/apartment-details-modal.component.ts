@@ -22,6 +22,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { ApartmentService } from 'src/app/services/apartment/apartment.service';
 import { Subscription, finalize } from 'rxjs';
+import { ReviewsService } from 'src/app/services/reviews/reviews.service';
 
 @Component({
   selector: 'app-apartment-details-modal',
@@ -42,6 +43,7 @@ import { Subscription, finalize } from 'rxjs';
 export class ApartmentDetailsModalComponent implements OnDestroy {
   fb = inject(FormBuilder);
   apartmentService = inject(ApartmentService);
+  reviewsService = inject(ReviewsService);
   subscription: Subscription = new Subscription();
   isLoading = signal(false);
 
@@ -71,8 +73,17 @@ export class ApartmentDetailsModalComponent implements OnDestroy {
         })
       )
       .subscribe({
-        next: value => console.log(value.valueOf()),
-        error: error => console.log(error),
+        next: () => {
+          console.log(
+            `Apartment added successfully. Now scraping reviews with id ${this.data.id}`
+          );
+
+          this.reviewsService.scrapeApartmentReviews(this.data.id).subscribe({
+            next: data => console.log(data),
+            error: error => console.log('Error scraping apartment', error),
+          });
+        },
+        error: error => console.log('Error adding apartment', error),
       });
   }
 

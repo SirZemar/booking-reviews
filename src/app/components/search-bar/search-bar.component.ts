@@ -1,8 +1,9 @@
 import {
-	ChangeDetectionStrategy,
-	Component,
-	ViewChild,
-	inject,
+  ChangeDetectionStrategy,
+  Component,
+  ViewChild,
+  inject,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
@@ -17,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { SearchService } from 'src/app/services/search/search.service';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { ApartmentDetailsModalComponent } from '../apartment-details-modal/apartment-details-modal.component';
+import { ReviewsService } from 'src/app/services/reviews/reviews.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -41,6 +43,7 @@ export class SearchBarComponent {
   searchService = inject(SearchService);
   dialogService = inject(DialogService);
 
+  reviewsService = inject(ReviewsService);
   form = this.fb.group({
     apartmentId: new FormControl(''),
   });
@@ -57,6 +60,14 @@ export class SearchBarComponent {
       this.openDialog();
       this.formDir.resetForm();
       this.onSearch();
+      const x = this.reviewsService.scrapeApartmentReviews(apartmentId);
+      // .subscribe({
+      //   next: data => console.log(data),
+      //   error: () => console.log('Failed to scrape review'),
+      //   complete: () => console.log('finished'),
+      // });
+
+      signal(x);
     }
   }
 
