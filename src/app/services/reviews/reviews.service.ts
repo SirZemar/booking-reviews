@@ -8,11 +8,6 @@ import { Observable, catchError, map, tap, throwError } from 'rxjs';
 })
 export class ReviewsService {
   http = inject(HttpClient);
-  // reviewRates$ = inject(HttpClient)
-  //   .get(
-  //     `${reviewsEndpoints.REVIEW_RATINGS}/oporto-invite-city-center-santo-ildefonso`
-  //   )
-  //   .pipe(map(x => (x as any).reviewRates));
 
   getApartmentReviewRates(apartmentId: string) {
     return this.http
@@ -21,8 +16,6 @@ export class ReviewsService {
   }
 
   scrapeApartmentReviews(apartmentId: string) {
-    console.log('Called');
-
     return this.http
       .get(`http://localhost:8080/apartments/${apartmentId}/scrapeReviews`)
       .pipe(
@@ -31,7 +24,5 @@ export class ReviewsService {
           return throwError(() => new Error(error));
         })
       );
-
-    console.log(apartmentId);
   }
 }

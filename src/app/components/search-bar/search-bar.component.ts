@@ -3,7 +3,6 @@ import {
   Component,
   ViewChild,
   inject,
-  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
@@ -66,8 +65,6 @@ export class SearchBarComponent {
       //   error: () => console.log('Failed to scrape review'),
       //   complete: () => console.log('finished'),
       // });
-
-      signal(x);
     }
   }
 

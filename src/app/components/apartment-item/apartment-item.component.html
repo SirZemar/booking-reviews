@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-content [ngStyle]="{ display: 'flex' }">
     <mat-card-title-group>
-      <mat-card-title>{{ apartment.id }}</mat-card-title>
+      <mat-card-title>{{ apartment.name }}</mat-card-title>
       <mat-card-subtitle>{{ apartment.id }}</mat-card-subtitle>
     </mat-card-title-group>
 
@@ -14,12 +14,28 @@
         <span>{{reviewsCountToNextTarget}}</span>
       </div>
     </div>
-
+    <button
+    (click)="navigateToUrl(apartment.id)"
+    class="small-icon-button"
+    mat-icon-button
+    >
+    <mat-icon>launch</mat-icon>
+    </button>
     <button
       class="small-icon-button"
       mat-icon-button
+      [matMenuTriggerFor]="menu"
       aria-label="Example icon button with a vertical three dot icon">
       <mat-icon [ngStyle]="{ scale: '1' }">more_vert</mat-icon>
     </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>Update</button>
+      <button mat-menu-item>Edit</button>
+      <button mat-menu-item>Delete</button>
+    </mat-menu>
+  </mat-card-content>
+  <mat-card-content [ngStyle]="{ display: 'flex', gap: '20px' }">
+    <p><b>Last update: </b>{{lastScrapeDate}}</p>
+    <p><b>Total reviews: </b>{{apartment.reviewsCount}}</p>
   </mat-card-content>
 </mat-card>
