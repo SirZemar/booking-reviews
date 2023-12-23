@@ -5,11 +5,13 @@ import { RouterModule } from '@angular/router';
 import { appRoutes } from './app/app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
 
 bootstrapApplication(AppComponent, {
-	providers: [
-		provideHttpClient(),
-		importProvidersFrom(RouterModule.forRoot(appRoutes)),
-		importProvidersFrom(BrowserAnimationsModule),
-	],
-}).catch((err) => console.error(err));
+  providers: [
+    provideHttpClient(),
+    importProvidersFrom(RouterModule.forRoot(appRoutes)),
+    importProvidersFrom(BrowserAnimationsModule),
+    importProvidersFrom(MatDialogModule),
+  ],
+}).catch(err => console.error(err));

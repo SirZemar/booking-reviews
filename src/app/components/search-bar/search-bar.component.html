@@ -1,4 +1,5 @@
 <form
+  class="search-bar-form"
   [formGroup]="form"
   (ngSubmit)="onSubmit()"
   (reset)="onReset()"
@@ -14,6 +15,7 @@
       data-testId="search-form-input"
       matInput
       type="text" />
+    </mat-form-field>
     <button
       type="reset"
       class="search-bar__close-button"
@@ -23,5 +25,12 @@
       aria-label="Clear">
       <mat-icon>close</mat-icon>
     </button>
-  </mat-form-field>
+    <button
+      type="submit"
+      class="search-bar__submit-button"
+      matSuffix
+      data-testId="search-form-submit-button"
+      mat-icon-button>
+      <mat-icon>send</mat-icon>
+    </button>
 </form>

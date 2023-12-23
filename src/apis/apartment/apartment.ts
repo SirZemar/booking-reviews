@@ -11,3 +11,9 @@ export const getApartment = (): string => {
 	const endpoint = `${baseUrl}/apartments`;
 	return endpoint;
 };
+
+export const addApartment = (id: string): string => {
+  const baseUrl = isDevMode() ? BASE_URL_DEV : BASE_URL;
+  const endpoint = `${baseUrl}/apartments/${id}/add`;
+  return endpoint;
+};

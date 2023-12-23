@@ -1,0 +1,36 @@
+.card {
+  width: 400px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  
+  &__header {
+    display: grid;
+    place-self: center;
+    padding: 16px;
+  }
+  &__footer {
+    margin-top: auto;
+  };
+
+  &__content {
+    height: 100%;
+  }
+}
+
+.form {
+  display: grid;
+  height: 100%;
+  &__field {
+    width: 100%;
+    height: min-content;
+  }
+}
+
+.hide {
+  display: none;
+}
+
+.spinner {
+  place-self: center;
+}

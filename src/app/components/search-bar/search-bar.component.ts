@@ -7,15 +7,16 @@ import {
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import {
-	FormBuilder,
-	ReactiveFormsModule,
-	FormsModule,
-	FormControl,
-	Validators,
-	FormGroupDirective,
+  FormBuilder,
+  ReactiveFormsModule,
+  FormsModule,
+  FormControl,
+  FormGroupDirective,
 } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { SearchService } from 'src/app/services/search/search.service';
+import { DialogService } from 'src/app/services/dialog/dialog.service';
+import { ApartmentDetailsModalComponent } from '../apartment-details-modal/apartment-details-modal.component';
 
 @Component({
   selector: 'app-search-bar',
@@ -38,30 +39,39 @@ export class SearchBarComponent {
 
   fb = inject(FormBuilder);
   searchService = inject(SearchService);
+  dialogService = inject(DialogService);
 
   form = this.fb.group({
     apartmentId: new FormControl(''),
   });
 
-  onSearch() {
-		// TODO Forcing type must be reviewed
+  onSearch(): void {
+    // TODO Forcing type must be reviewed
     const searchTerm = this.form.get('apartmentId')?.value;
     this.searchService.setSearchTerm(searchTerm!);
   }
 
-  async onSubmit() {
-    const pageName = this.form.value.apartmentId;
-
-    if (pageName) {
-      // const reviewRates = await getReviewRates(pageName);
-      // console.log(reviewRates);
-
+  onSubmit(): void {
+    const apartmentId = this.form.value.apartmentId;
+    if (apartmentId) {
+      this.openDialog();
       this.formDir.resetForm();
+      this.onSearch();
     }
   }
 
-  onReset() {
+  onReset(): void {
     this.formDir.resetForm();
     this.onSearch();
+  }
+
+  openDialog(): void {
+    const dialogRef =
+      this.dialogService.openDialog<ApartmentDetailsModalComponent>(
+        ApartmentDetailsModalComponent,
+        {
+          data: { id: this.form.get('apartmentId')?.value },
+        }
+      );
   }
 }

@@ -7,4 +7,5 @@ export type Apartment = {
   reviewsCount: number;
   lastReviewsScrape: Timestamp;
   reviews: Review[];
+  name: string;
 };

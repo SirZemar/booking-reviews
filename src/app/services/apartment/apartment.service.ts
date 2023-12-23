@@ -48,4 +48,13 @@ export class ApartmentService {
       })
     );
   }
+
+  addApartment(id: string, payload: Pick<Apartment, 'name'>) {
+    return this.http.post(apartmentEndpoints.addApartment(id), payload).pipe(
+      catchError(error => {
+        console.error(`Error adding apartment ${id}`, error);
+        return throwError(() => new Error(error));
+      })
+    );
+  }
 }
