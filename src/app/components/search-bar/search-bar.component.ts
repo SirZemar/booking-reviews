@@ -16,7 +16,7 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { SearchService } from 'src/app/services/search/search.service';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { ApartmentDetailsModalComponent } from '../apartment-details-modal/apartment-details-modal.component';
+import { ApartmentAddFormModalComponent } from '../apartment-add-form/apartment-add-form.modal.component';
 import { ReviewsService } from 'src/app/services/reviews/reviews.service';
 
 @Component({
@@ -59,12 +59,6 @@ export class SearchBarComponent {
       this.openDialog();
       this.formDir.resetForm();
       this.onSearch();
-      const x = this.reviewsService.scrapeApartmentReviews(apartmentId);
-      // .subscribe({
-      //   next: data => console.log(data),
-      //   error: () => console.log('Failed to scrape review'),
-      //   complete: () => console.log('finished'),
-      // });
     }
   }
 
@@ -75,8 +69,8 @@ export class SearchBarComponent {
 
   openDialog(): void {
     const dialogRef =
-      this.dialogService.openDialog<ApartmentDetailsModalComponent>(
-        ApartmentDetailsModalComponent,
+      this.dialogService.openDialog<ApartmentAddFormModalComponent>(
+        ApartmentAddFormModalComponent,
         {
           data: { id: this.form.get('apartmentId')?.value },
         }

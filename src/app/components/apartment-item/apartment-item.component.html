@@ -15,7 +15,7 @@
       </div>
     </div>
     <button
-    (click)="navigateToUrl(apartment.id)"
+    (click)="navigateToUrl()"
     class="small-icon-button"
     mat-icon-button
     >
@@ -29,9 +29,9 @@
       <mat-icon [ngStyle]="{ scale: '1' }">more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item>Update</button>
-      <button mat-menu-item>Edit</button>
-      <button mat-menu-item>Delete</button>
+      <button (click)="onUpdate()" mat-menu-item>Update</button>
+      <button (click)="onEdit()" mat-menu-item>Edit</button>
+      <button  (click)="onDelete()" mat-menu-item>Delete</button>
     </mat-menu>
   </mat-card-content>
   <mat-card-content [ngStyle]="{ display: 'flex', gap: '20px' }">

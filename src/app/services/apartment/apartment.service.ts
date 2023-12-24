@@ -57,4 +57,22 @@ export class ApartmentService {
       })
     );
   }
+
+  patchApartment(id: string, body: Partial<Apartment>) {
+    return this.http.patch(apartmentEndpoints.patchApartment(id), body).pipe(
+      catchError(error => {
+        console.error(`Error editing apartment ${id} with body ${body}`, error);
+        return throwError(() => new Error(error));
+      })
+    );
+  }
+
+  deleteApartment(id: string) {
+    return this.http.delete(apartmentEndpoints.deleteApartment(id)).pipe(
+      catchError(error => {
+        console.error(`Error deleting apartment ${id}`, error);
+        return throwError(() => new Error(error));
+      })
+    );
+  }
 }

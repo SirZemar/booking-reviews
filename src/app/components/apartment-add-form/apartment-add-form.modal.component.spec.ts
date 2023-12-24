@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ApartmentDetailsModalComponent } from './apartment-details-modal.component';
+import { ApartmentAddFormModalComponent } from './apartment-add-form.modal.component';
 
 describe('ApartmentDetailsModalComponent', () => {
-  let component: ApartmentDetailsModalComponent;
-  let fixture: ComponentFixture<ApartmentDetailsModalComponent>;
+  let component: ApartmentAddFormModalComponent;
+  let fixture: ComponentFixture<ApartmentAddFormModalComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ApartmentDetailsModalComponent]
+      imports: [ApartmentAddFormModalComponent],
     });
-    fixture = TestBed.createComponent(ApartmentDetailsModalComponent);
+    fixture = TestBed.createComponent(ApartmentAddFormModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

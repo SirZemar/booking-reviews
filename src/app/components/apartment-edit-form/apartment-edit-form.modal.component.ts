@@ -25,7 +25,7 @@ import { Subscription, finalize } from 'rxjs';
 import { ReviewsService } from 'src/app/services/reviews/reviews.service';
 
 @Component({
-  selector: 'app-apartment-details-modal',
+  selector: 'app-apartment-edit-form',
   standalone: true,
   imports: [
     CommonModule,
@@ -36,11 +36,11 @@ import { ReviewsService } from 'src/app/services/reviews/reviews.service';
     MatButtonModule,
     MatProgressSpinnerModule,
   ],
-  templateUrl: './apartment-details-modal.component.html',
-  styleUrls: ['./apartment-details-modal.component.scss'],
+  templateUrl: './apartment-edit-form.modal.component.html',
+  styleUrls: ['./apartment-edit-form.modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApartmentDetailsModalComponent implements OnDestroy {
+export class ApartmentEditFormModalComponent implements OnDestroy {
   fb = inject(FormBuilder);
   apartmentService = inject(ApartmentService);
   reviewsService = inject(ReviewsService);
@@ -52,11 +52,11 @@ export class ApartmentDetailsModalComponent implements OnDestroy {
       { value: this.data.id, disabled: true },
       Validators.required
     ),
-    name: new FormControl(''),
+    name: new FormControl(this.data.name),
   });
 
   constructor(
-    public dialogRef: MatDialogRef<ApartmentDetailsModalComponent>,
+    public dialogRef: MatDialogRef<ApartmentEditFormModalComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any
   ) {}
 
@@ -65,7 +65,7 @@ export class ApartmentDetailsModalComponent implements OnDestroy {
     const name = this.form.get('name')?.value;
 
     this.subscription = this.apartmentService
-      .addApartment(this.data.id, name ? { name } : { name: this.data.id })
+      .patchApartment(this.data.id, { name: name ? name : this.data.id })
       .pipe(
         finalize(() => {
           this.isLoading.set(false);
@@ -74,16 +74,9 @@ export class ApartmentDetailsModalComponent implements OnDestroy {
       )
       .subscribe({
         next: () => {
-          console.log(
-            `Apartment added successfully. Now scraping reviews with id ${this.data.id}`
-          );
-
-          this.reviewsService.scrapeApartmentReviews(this.data.id).subscribe({
-            next: data => console.log(data),
-            error: error => console.log('Error scraping apartment', error),
-          });
+          console.log(`Apartment edited successfully`);
         },
-        error: error => console.log('Error adding apartment', error),
+        error: error => console.log('Error editing apartment', error),
       });
   }
 
