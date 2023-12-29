@@ -5,18 +5,23 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
+// Components
+import { ApartmentEditFormModalComponent } from '../apartment-edit-form/apartment-edit-form.modal.component';
+import { ApartmentDeleteModalComponent } from '../apartment-delete/apartment-delete.modal.component';
 // Material Components
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+// Models
 import { Apartment } from 'src/app/models/apartment.model';
-import { Timestamp } from '@firebase/firestore';
+// Services
 import { ReviewsService } from 'src/app/services/reviews/reviews.service';
 import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { ApartmentEditFormModalComponent } from '../apartment-edit-form/apartment-edit-form.modal.component';
-import { ApartmentDeleteModalComponent } from '../apartment-delete/apartment-delete.modal.component';
-
+// Pipes
+import { BookingRoundNumberPipe } from 'src/app/pipes/bookingRoundNumber/booking-round-number.pipe';
+// Other
+import { Timestamp } from '@firebase/firestore';
 @Component({
   selector: 'app-apartment-item',
   standalone: true,
@@ -26,6 +31,7 @@ import { ApartmentDeleteModalComponent } from '../apartment-delete/apartment-del
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
+    BookingRoundNumberPipe
   ],
   templateUrl: './apartment-item.component.html',
   styleUrls: ['./apartment-item.component.scss'],
@@ -43,21 +49,52 @@ export class ApartmentItemComponent {
       return 0;
     }
 
-    const targetReviewRating = parseFloat(
-      (this.apartment.reviewsRatingAverage + 0.1).toFixed(1)
-    );
-    const targetRateBeforeBookingRound = parseFloat(
-      (targetReviewRating - 0.05).toFixed(2)
-    );
+    let targetRateBeforeBookingRound = 0;
+    const reviewsRatingAverageTimes10 =
+      this.apartment.reviewsRatingAverage * 10;
 
-    const numberOfReviews = this.apartment.reviewsCount;
-    const totalSum = this.apartment.reviewsRatingAverage * numberOfReviews;
-    const numberOfTopRateReviewsNeeded = Math.ceil(
-      (targetRateBeforeBookingRound * numberOfReviews - totalSum) /
-        (10 - targetRateBeforeBookingRound)
-    );
+    if (
+      reviewsRatingAverageTimes10 - Math.floor(reviewsRatingAverageTimes10) >
+      0.5
+    ) {
+      targetRateBeforeBookingRound =
+        Math.floor(reviewsRatingAverageTimes10) / 10 + 0.1501;
+    } else {
+      targetRateBeforeBookingRound =
+        Math.floor(reviewsRatingAverageTimes10) / 10 + 0.0501;
+    }
 
-    return numberOfTopRateReviewsNeeded;
+    const totalSum =
+      this.apartment.reviewsRatingAverage * this.apartment.reviewsCount;
+    let newReviewsAverage = this.apartment.reviewsRatingAverage;
+    let reviewsCountToNextTarget = 0;
+
+    while (newReviewsAverage <= targetRateBeforeBookingRound) {
+      reviewsCountToNextTarget++;
+      newReviewsAverage =
+        (totalSum + 10 * reviewsCountToNextTarget) /
+        (this.apartment.reviewsCount + reviewsCountToNextTarget);
+    }
+
+    return reviewsCountToNextTarget;
+
+    //TODO Not as accurate but faster
+
+    // const targetReviewRating = parseFloat(
+    //   (this.apartment.reviewsRatingAverage + 0.1).toFixed(1)
+    // );
+    // const targetRateBeforeBookingRound = parseFloat(
+    //   (targetReviewRating - 0.05).toFixed(2)
+    // );
+
+    // const numberOfReviews = this.apartment.reviewsCount;
+    // const totalSum = this.apartment.reviewsRatingAverage * numberOfReviews;
+    // const numberOfTopRateReviewsNeeded = Math.ceil(
+    //   (targetRateBeforeBookingRound * numberOfReviews - totalSum) /
+    //     (10 - targetRateBeforeBookingRound)
+    // );
+
+    // return numberOfTopRateReviewsNeeded;
   }
 
   get lastScrapeDate() {

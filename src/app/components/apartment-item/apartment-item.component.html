@@ -7,7 +7,7 @@
 
     <div class="card__content__ratings">
       <span class="card__content__ratings__current">{{
-        apartment.reviewsRatingAverage | number : '1.1-1'
+        apartment.reviewsRatingAverage | bookingRoundNumber
       }}</span>
       <div class="card__content__ratings__target">
         <mat-icon [ngStyle]="{ color: 'green' }">trending_up</mat-icon>
@@ -37,5 +37,6 @@
   <mat-card-content [ngStyle]="{ display: 'flex', gap: '20px' }">
     <p><b>Last update: </b>{{lastScrapeDate}}</p>
     <p><b>Total reviews: </b>{{apartment.reviewsCount}}</p>
+    <p><b>Average: </b>{{apartment.reviewsRatingAverage | number : '1.1-5'}}</p>
   </mat-card-content>
 </mat-card>
