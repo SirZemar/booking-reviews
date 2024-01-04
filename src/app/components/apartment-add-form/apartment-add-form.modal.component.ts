@@ -66,7 +66,6 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
 
     this.subscription = this.apartmentService
       .addApartment(this.data.id, name ? { name } : { name: this.data.id })
-
       .pipe(
         finalize(() => {
           this.isLoading.set(false);

@@ -1,8 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { ApartmentService } from '../../services/apartment/apartment.service';
 import { CommonModule } from '@angular/common';
 import { ApartmentItemComponent } from '../apartment-item/apartment-item.component';
-// import { Apartment } from 'path-to-your-apartment-model'; // Update with the actual path to your model
+import { toSignal } from '@angular/core/rxjs-interop';
+import { SearchService } from 'src/app/services/search/search.service';
 
 @Component({
   selector: 'app-apartment-list',
@@ -14,6 +20,17 @@ import { ApartmentItemComponent } from '../apartment-item/apartment-item.compone
 })
 export class ApartmentListComponent {
   apartmentService = inject(ApartmentService);
+  searchService = inject(SearchService);
 
-  apartments$ = this.apartmentService.getFilteredApartments();
+  searchTerm = toSignal(this.searchService.search$, { initialValue: '' });
+
+  apartments = computed(() => {
+    this.searchTerm() ?? '';
+    return this.apartmentService.apartments().filter(apartment => {
+      return (
+        apartment.id.toLowerCase().includes(this.searchTerm().toLowerCase()) ||
+        apartment.name.toLowerCase().includes(this.searchTerm().toLowerCase())
+      );
+    });
+  });
 }

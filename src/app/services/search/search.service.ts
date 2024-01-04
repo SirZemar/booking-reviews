@@ -11,4 +11,8 @@ export class SearchService {
   setSearchTerm(searchTerm: string): void {
     this.searchSubject.next(searchTerm);
   }
+
+  unsubscribe() {
+    this.searchSubject.unsubscribe();
+  }
 }
