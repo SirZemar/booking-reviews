@@ -11,6 +11,10 @@
   }
   &__footer {
     margin-top: auto;
+
+    &__message {
+      color: red;
+    }
   };
 
   &__content {

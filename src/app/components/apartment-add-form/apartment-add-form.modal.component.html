@@ -29,6 +29,7 @@
   </mat-card-content>
   <mat-card-footer class="card__footer">
     <mat-card-actions [align]="'end'">
+      <span *ngIf="temporaryMessage$ | async as temporaryMessage" [@enterAnimation] class="card__footer__message">{{temporaryMessage}}</span>
       <button form="apartmentDetailsForm" [disabled]="isLoading()" mat-button type="submit">Add</button>
       <button form="apartmentDetailsForm" (click)="requestCancel()" type="button" mat-button>Cancel</button>
     </mat-card-actions>
