@@ -1,3 +1,4 @@
+<div class="search-bar-container">
 <form
   class="search-bar-form"
   [formGroup]="form"
@@ -15,8 +16,7 @@
       data-testId="search-form-input"
       matInput
       type="text" />
-    </mat-form-field>
-    <button
+      <button
       type="reset"
       class="search-bar__close-button"
       data-testId="search-form-close-button"
@@ -33,4 +33,6 @@
       mat-icon-button>
       <mat-icon>send</mat-icon>
     </button>
+    </mat-form-field>
 </form>
+</div>

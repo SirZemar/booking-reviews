@@ -5,7 +5,7 @@
       <mat-card-subtitle>{{ apartment.id }}</mat-card-subtitle>
     </mat-card-title-group>
 
-    <div class="card__content__ratings">
+    <div *ngIf="apartment.reviewsRatingAverage, else loadingRatingAverage" class="card__content__ratings">
       <span class="card__content__ratings__current">{{
         apartment.reviewsRatingAverage | bookingRoundNumber
       }}</span>
@@ -40,3 +40,9 @@
     <p><b>Average: </b>{{apartment.reviewsRatingAverage | number : '1.1-5'}}</p>
   </mat-card-content>
 </mat-card>
+
+<ng-template #loadingRatingAverage>
+  <div class="card__content__ratings">
+    <h1>O</h1>
+  </div>
+</ng-template>

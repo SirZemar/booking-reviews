@@ -22,7 +22,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { ApartmentService } from 'src/app/services/apartment/apartment.service';
 import {
-  Observable,
   Subject,
   Subscription,
   concat,
@@ -110,15 +109,14 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
           console.log(
             `Apartment added successfully. Now scraping reviews with id ${this.data.id}`
           );
-          return this.reviewsService.scrapeApartmentReviews(this.data.id);
-        }),
-        finalize(() => {
           this.isLoading.set(false);
           this.dialogRef.close();
+          return this.reviewsService.scrapeApartmentReviews(this.data.id);
         })
       )
       .subscribe({
         next: data => console.log(data),
+        complete: () => console.log('Finished scraping apartment'),
         error: error =>
           console.log('Error adding or scraping apartment', error),
       });
@@ -129,6 +127,8 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.isLoading()) {
+      this.subscription.unsubscribe();
+    }
   }
 }

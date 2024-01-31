@@ -13,6 +13,7 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(RouterModule.forRoot(appRoutes)),
     importProvidersFrom(BrowserAnimationsModule),
     importProvidersFrom(MatDialogModule),
+    provideAnimations(),
     provideAnimations()
 ],
 }).catch(err => console.error(err));

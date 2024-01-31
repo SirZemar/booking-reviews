@@ -22,6 +22,7 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { BookingRoundNumberPipe } from 'src/app/pipes/bookingRoundNumber/booking-round-number.pipe';
 // Other
 import { Timestamp } from '@firebase/firestore';
+import { tap } from 'rxjs';
 @Component({
   selector: 'app-apartment-item',
   standalone: true,
@@ -31,7 +32,7 @@ import { Timestamp } from '@firebase/firestore';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
-    BookingRoundNumberPipe
+    BookingRoundNumberPipe,
   ],
   templateUrl: './apartment-item.component.html',
   styleUrls: ['./apartment-item.component.scss'],
@@ -45,6 +46,37 @@ export class ApartmentItemComponent {
   dialogService = inject(DialogService);
 
   get reviewsCountToNextTarget(): number {
+    return this.getReviewsCountToNextTarget();
+  }
+
+  get lastScrapeDate() {
+    return this.getLastScrapeDate();
+  }
+
+  getLastScrapeDate() {
+    const timestamp = this.apartment?.lastReviewsScrape;
+    if (timestamp) {
+      const lastScrapeDate = new Timestamp(
+        timestamp._seconds,
+        timestamp._nanoseconds
+      ).toDate();
+
+      const options = {
+        weekday: 'short' as const,
+        year: 'numeric' as const,
+        month: 'short' as const,
+        day: 'numeric' as const,
+        hour: 'numeric' as const,
+        minute: 'numeric' as const,
+        hour12: true,
+      };
+      return new Date(lastScrapeDate).toLocaleString('en-US', options);
+    } else {
+      return '';
+    }
+  }
+
+  getReviewsCountToNextTarget() {
     if (this.apartment.reviewsRatingAverage > 9.95) {
       return 0;
     }
@@ -77,7 +109,6 @@ export class ApartmentItemComponent {
     }
 
     return reviewsCountToNextTarget;
-
     //TODO Not as accurate but faster
 
     // const targetReviewRating = parseFloat(
@@ -96,30 +127,6 @@ export class ApartmentItemComponent {
 
     // return numberOfTopRateReviewsNeeded;
   }
-
-  get lastScrapeDate() {
-    const timestamp = this.apartment?.lastReviewsScrape;
-    if (timestamp) {
-      const lastScrapeDate = new Timestamp(
-        timestamp._seconds,
-        timestamp._nanoseconds
-      ).toDate();
-
-      const options = {
-        weekday: 'short' as const,
-        year: 'numeric' as const,
-        month: 'short' as const,
-        day: 'numeric' as const,
-        hour: 'numeric' as const,
-        minute: 'numeric' as const,
-        hour12: true,
-      };
-      return new Date(lastScrapeDate).toLocaleString('en-US', options);
-    } else {
-      return '';
-    }
-  }
-
   navigateToUrl() {
     window.open(
       `https://www.booking.com/hotel/pt/${this.apartment.id}.pt-pt.html?aid=304142&label=gen173nr-1FCAEoggI46AdIM1gEaLsBiAEBmAEfuAEHyAEM2AEB6AEB-AEMiAIBqAIDuAKRo5usBsACAdICJDYwMzQ4ZDdjLTM5ZDUtNDMxZC05ZGZkLTY2NzQxNDY0YmYzNNgCBuACAQ&sid=ad4661baf04ea1012e4c76eaa4bde283&dest_id=-2173088;dest_type=city;dist=0;group_adults=1;group_children=0;hapos=1;hpos=1;no_rooms=1;req_adults=1;req_children=0;room1=A;sb_price_type=total;sr_order=popularity;srepoch=1703336399;srpvid=59a95b638872000f;type=total;ucfs=1&#hotelTmpl`,
@@ -128,7 +135,7 @@ export class ApartmentItemComponent {
   }
 
   onUpdate() {
-    this.reviewsService.scrapeApartmentReviews(this.apartment.id).subscribe({
+    this.reviewsService.scrapeApartmentReviews(this.apartment.id).pipe(tap(()=> console.log('Change state of loading reviews'))).subscribe({
       next: data => console.log(data),
       error: error => console.log('Error scraping apartment', error),
     });

@@ -1,9 +1,22 @@
+.search-bar-container {
+    position: sticky;
+    width: 100%;
+    z-index: 100;
+    top: 0;
+}
+
 .search-bar-form {
     display: flex;
     align-items: center;
-    gap: 10px
 }
 
 .search-bar {
-    width: 50%;
+    width: 100%;
+
+    &_label {
+        background-color: red;
+    }
+    button {
+        margin: 0 5px;
+    }
 }
