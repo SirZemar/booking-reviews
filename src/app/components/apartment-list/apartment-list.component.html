@@ -1,5 +1,5 @@
-<ng-container *ngIf="apartments">
+<ng-container *ngIf="apartments" >
   <app-apartment-item
-    *ngFor="let apartment of apartments()"
+    *ngFor="let apartment of apartments() | sortApartments"
     [apartment]="apartment"></app-apartment-item>
 </ng-container>

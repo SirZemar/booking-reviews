@@ -9,12 +9,12 @@ import { CommonModule } from '@angular/common';
 import { ApartmentItemComponent } from '../apartment-item/apartment-item.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SearchService } from 'src/app/services/search/search.service';
-
+import { SortApartmentsPipe } from 'src/app/pipes/sortApartments/sort-apartments.pipe';
 @Component({
   selector: 'app-apartment-list',
   templateUrl: './apartment-list.component.html',
   styleUrls: ['./apartment-list.component.scss'],
-  imports: [CommonModule, ApartmentItemComponent],
+  imports: [CommonModule, ApartmentItemComponent, SortApartmentsPipe],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
