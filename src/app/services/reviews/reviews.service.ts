@@ -13,7 +13,7 @@ export class ReviewsService {
 
   scrapeApartmentReviews(apartmentId: string) {
     return this.http.get(reviewsEndpoints.scrapeReviews(apartmentId)).pipe(
-      tap(() => this.apartmentService.setApartmentsSignal()),
+      tap(() => this.apartmentService.patchApartmentSignal(apartmentId)),
       catchError(error => {
         console.error('Error scraping apartment:', error);
         return throwError(() => new Error(error));

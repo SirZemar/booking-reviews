@@ -13,6 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Models
 import { Apartment } from 'src/app/models/apartment.model';
 // Services
@@ -23,6 +24,7 @@ import { BookingRoundNumberPipe } from 'src/app/pipes/bookingRoundNumber/booking
 // Other
 import { Timestamp } from '@firebase/firestore';
 import { tap } from 'rxjs';
+import { ApartmentService } from 'src/app/services/apartment/apartment.service';
 @Component({
   selector: 'app-apartment-item',
   standalone: true,
@@ -32,6 +34,7 @@ import { tap } from 'rxjs';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
+    MatProgressSpinnerModule,
     BookingRoundNumberPipe,
   ],
   templateUrl: './apartment-item.component.html',
@@ -44,6 +47,9 @@ export class ApartmentItemComponent {
   location = inject(Location);
   reviewsService = inject(ReviewsService);
   dialogService = inject(DialogService);
+  apartmentService = inject(ApartmentService);
+
+  loading = false;
 
   get reviewsCountToNextTarget(): number {
     return this.getReviewsCountToNextTarget();
@@ -53,6 +59,7 @@ export class ApartmentItemComponent {
     return this.getLastScrapeDate();
   }
 
+  // TODO Transform into dumb component
   getLastScrapeDate() {
     const timestamp = this.apartment?.lastReviewsScrape;
     if (timestamp) {
@@ -135,29 +142,31 @@ export class ApartmentItemComponent {
   }
 
   onUpdate() {
-    this.reviewsService.scrapeApartmentReviews(this.apartment.id).pipe(tap(()=> console.log('Change state of loading reviews'))).subscribe({
-      next: data => console.log(data),
-      error: error => console.log('Error scraping apartment', error),
-    });
+    this.loading = true;
+    this.reviewsService
+      .scrapeApartmentReviews(this.apartment.id)
+      .pipe(tap(() => (this.loading = false)))
+      .subscribe({
+        next: data => console.log(data),
+        error: error => console.log('Error scraping apartment', error),
+      });
   }
 
   onEdit() {
-    const dialogRef =
-      this.dialogService.openDialog<ApartmentEditFormModalComponent>(
-        ApartmentEditFormModalComponent,
-        {
-          data: { id: this.apartment.id, name: this.apartment.name },
-        }
-      );
+    this.dialogService.openDialog<ApartmentEditFormModalComponent>(
+      ApartmentEditFormModalComponent,
+      {
+        data: { id: this.apartment.id, name: this.apartment.name },
+      }
+    );
   }
 
   onDelete() {
-    const dialogRef =
-      this.dialogService.openDialog<ApartmentDeleteModalComponent>(
-        ApartmentDeleteModalComponent,
-        {
-          data: { id: this.apartment.id },
-        }
-      );
+    this.dialogService.openDialog<ApartmentDeleteModalComponent>(
+      ApartmentDeleteModalComponent,
+      {
+        data: { id: this.apartment.id },
+      }
+    );
   }
 }
