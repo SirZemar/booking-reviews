@@ -1,4 +1,4 @@
-import { Timestamp } from '@firebase/firestore-types';
+import { Timestamp } from './timestamp.model';
 
 export type Review = {
   date: Timestamp;

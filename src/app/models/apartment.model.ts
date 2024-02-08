@@ -1,9 +1,6 @@
+import { ApartmentStatus } from './apartment-status.model';
 import { Review } from './review.model';
-import { Timestamp as firestoreTimestamp } from '@firebase/firestore-types';
-interface Timestamp extends firestoreTimestamp {
-  _seconds: number;
-  _nanoseconds: number;
-}
+import { Timestamp } from './timestamp.model';
 
 export type Apartment = {
   id: string;
@@ -12,4 +9,5 @@ export type Apartment = {
   lastReviewsScrape: Timestamp;
   reviews: Review[];
   name: string;
+  status: ApartmentStatus;
 };

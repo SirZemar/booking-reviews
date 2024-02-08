@@ -5,8 +5,8 @@
       <mat-card-subtitle>{{ apartment.id }}</mat-card-subtitle>
     </mat-card-title-group>
 
-    <div *ngIf="apartment.reviewsRatingAverage" class="card__content__ratings">
-      <ng-container *ngIf="!loading; else loadingRatingAverage">
+    <div class="card__content__ratings">
+      <ng-container *ngIf="!loading(); else loadingRatingAverage">
         <span class="card__content__ratings__current">{{
           apartment.reviewsRatingAverage | bookingRoundNumber
         }}</span>
@@ -16,7 +16,7 @@
         </div>
       </ng-container>
     </div>
-    
+
     <button (click)="navigateToUrl()" class="small-icon-button" mat-icon-button>
       <mat-icon>launch</mat-icon>
     </button>
@@ -34,14 +34,37 @@
     </mat-menu>
   </mat-card-content>
   <mat-card-content [ngStyle]="{ display: 'flex', gap: '20px' }">
-    <p><b>Last update: </b>{{ loading ? '---' : lastScrapeDate }}</p>
-    <p><b>Total reviews: </b>{{ loading ? '---' :  apartment.reviewsCount }}</p>
+    <ng-container *ngIf="!loading(); else loadingDetails">
+    <p><b>Last update: </b>{{ lastScrapeDate }}</p>
+    <p><b>Total reviews: </b>{{ apartment.reviewsCount }}</p>
     <p>
-      <b>Average: </b>{{ loading ? '---' :  apartment.reviewsRatingAverage | number : '1.1-5' }}
+      <b>Average: </b>{{ apartment.reviewsRatingAverage | number : '1.1-5' }}
     </p>
+  </ng-container>
   </mat-card-content>
 </mat-card>
 
 <ng-template #loadingRatingAverage>
-    <mat-spinner style="height: 40px; width: 40px; margin-left: 30px;" aria-label="Loading rating average..."></mat-spinner>
+  <mat-spinner
+    style="height: 40px; width: 40px; margin-left: 30px"
+    aria-label="Loading rating average..."></mat-spinner>
 </ng-template>
+
+<ng-template #loadingDetails>
+  <p><b>Last update: </b>---</p>
+  <p><b>Total reviews: </b>---</p>
+  <p><b>Average: </b>---</p>
+</ng-template>
+
+<!-- 
+  <p><b>Last update: </b>{{ loading() ? '---' : lastScrapeDate }}</p>
+    <p>
+      <b>Total reviews: </b>{{ loading() ? '---' : apartment.reviewsCount }}
+    </p>
+    <p>
+      <b>Average: </b
+      >{{
+        loading() ? '---' : (apartment.reviewsRatingAverage | number : '1.1-5')
+      }}
+    </p>
+   -->

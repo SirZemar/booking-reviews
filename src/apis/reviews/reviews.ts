@@ -11,3 +11,9 @@ export const scrapeReviews = (id: string): string => {
   const endpoint = `${baseUrl}/apartments/${id}/scrapeReviews`;
   return endpoint;
 };
+
+export const addReviews = (id: string): string => {
+  const baseUrl = isDevMode() ? BASE_URL_DEV : BASE_URL;
+  const endpoint = `${baseUrl}/apartments/${id}/reviews/add`;
+  return endpoint;
+};

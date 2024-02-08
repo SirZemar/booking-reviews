@@ -2,7 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  computed,
   inject,
+  signal,
 } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 // Components
@@ -23,8 +25,12 @@ import { DialogService } from 'src/app/services/dialog/dialog.service';
 import { BookingRoundNumberPipe } from 'src/app/pipes/bookingRoundNumber/booking-round-number.pipe';
 // Other
 import { Timestamp } from '@firebase/firestore';
-import { tap } from 'rxjs';
 import { ApartmentService } from 'src/app/services/apartment/apartment.service';
+import {
+  ApartmentStatus,
+  StatusEnum,
+} from 'src/app/models/apartment-status.model';
+import { Review } from 'src/app/models/review.model';
 @Component({
   selector: 'app-apartment-item',
   standalone: true,
@@ -49,7 +55,13 @@ export class ApartmentItemComponent {
   dialogService = inject(DialogService);
   apartmentService = inject(ApartmentService);
 
-  loading = false;
+  updating = signal(false);
+  loading = computed(() => {
+    if (this.apartment.status === StatusEnum.pending || this.updating()) {
+      return true;
+    }
+    return false;
+  });
 
   get reviewsCountToNextTarget(): number {
     return this.getReviewsCountToNextTarget();
@@ -142,14 +154,21 @@ export class ApartmentItemComponent {
   }
 
   onUpdate() {
-    this.loading = true;
-    this.reviewsService
-      .scrapeApartmentReviews(this.apartment.id)
-      .pipe(tap(() => (this.loading = false)))
-      .subscribe({
-        next: data => console.log(data),
-        error: error => console.log('Error scraping apartment', error),
-      });
+    this.updating.set(true);
+    this.reviewsService.scrapeApartmentReviews(this.apartment.id).subscribe({
+      next: data =>
+        this.reviewsService
+          .addApartmentReviews(this.apartment.id, data)
+          .subscribe({
+            complete: () => this.updating.set(false),
+            error: error =>
+              console.error(
+                `Failed to add reviews to apartment ${this.apartment.id}`,
+                error
+              ),
+          }),
+      error: error => console.error('Error scraping apartment', error),
+    });
   }
 
   onEdit() {

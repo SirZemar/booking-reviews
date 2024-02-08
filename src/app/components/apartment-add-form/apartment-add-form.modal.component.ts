@@ -21,15 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { ApartmentService } from 'src/app/services/apartment/apartment.service';
-import {
-  Subject,
-  Subscription,
-  concat,
-  delay,
-  finalize,
-  of,
-  switchMap,
-} from 'rxjs';
+import { Subject, Subscription, concat, delay, of, switchMap } from 'rxjs';
 import { ReviewsService } from 'src/app/services/reviews/reviews.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 
@@ -76,7 +68,7 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
 
   form = this.fb.group({
     id: new FormControl(
-      { value: this.data.id, disabled: true },
+      { value: this.apartment.id, disabled: true },
       Validators.required
     ),
     name: new FormControl(''),
@@ -84,7 +76,7 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
 
   constructor(
     public dialogRef: MatDialogRef<ApartmentAddFormModalComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: any
+    @Inject(MAT_DIALOG_DATA) private apartment: any
   ) {}
 
   onSubmit() {
@@ -93,7 +85,8 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
     const apartmentExist = this.apartmentService
       .apartments()
       .find(
-        apartment => apartment.id.toLowerCase() === this.data.id.toLowerCase()
+        apartment =>
+          apartment.id.toLowerCase() === this.apartment.id.toLowerCase()
       );
 
     if (apartmentExist) {
@@ -103,19 +96,25 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
     }
 
     this.subscription = this.apartmentService
-      .addApartment(this.data.id, name ? { name } : { name: this.data.id })
+      .addApartment(
+        this.apartment.id,
+        name ? { name } : { name: this.apartment.id }
+      )
       .pipe(
         switchMap(() => {
           console.log(
-            `Apartment added successfully. Now scraping reviews with id ${this.data.id}`
+            `Apartment added successfully. Now scraping reviews with id ${this.apartment.id}`
           );
           this.isLoading.set(false);
           this.dialogRef.close();
-          return this.reviewsService.scrapeApartmentReviews(this.data.id);
-        })
+          return this.reviewsService.scrapeApartmentReviews(this.apartment.id);
+        }),
+        switchMap(reviews =>
+          this.reviewsService.addApartmentReviews(this.apartment.id, reviews)
+        )
       )
       .subscribe({
-        next: data => console.log(data),
+        next: (data: any) => console.log(`${data.msg}`),
         complete: () => console.log('Finished scraping apartment'),
         error: error =>
           console.log('Error adding or scraping apartment', error),
