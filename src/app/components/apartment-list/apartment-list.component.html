@@ -1,8 +1,14 @@
 <ul>
   @for (apartment of apartments | sortApartments; track apartment.id) {
-    <app-apartment-item [apartment]="apartment" (launchBookingPage)="launchBookingPage.emit(apartment.id)"></app-apartment-item>  
+  <app-apartment-item
+    [apartment]="apartment"
+    (launchBookingPage)="launchBookingPage.emit(apartment.id)"
+    (update)="updateItem.emit([apartment.id, $event])"
+    (edit)="editItem.emit([apartment.id, apartment.name])"
+    (delete)="deleteItem.emit(apartment.id)">
+  </app-apartment-item>
   } @empty {
-    <h2>No apartments found.</h2> 
+  <h2>No apartments found.</h2>
   <!-- //TODO add a a component to display dynamic message. This smart component will get value from search tearm -->
   }
 </ul>

@@ -5,13 +5,9 @@ import {
   Input,
   Output,
   computed,
-  inject,
   signal,
 } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-// Components
-import { ApartmentEditFormModalComponent } from '../apartment-edit-form/apartment-edit-form.modal.component';
-import { ApartmentDeleteModalComponent } from '../apartment-delete/apartment-delete.modal.component';
 // Material Components
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
@@ -20,22 +16,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Models
 import { Apartment } from 'src/app/models/apartment.model';
-// Services
-import { ReviewsService } from 'src/app/services/reviews/reviews.service';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
-// Pipes
-import { BookingRoundNumberPipe } from 'src/app/pipes/bookingRoundNumber/booking-round-number.pipe';
-// Other
-import { Timestamp } from '@firebase/firestore';
-import { ApartmentService } from 'src/app/services/apartment/apartment.service';
-import {
-  ApartmentStatus,
-  StatusEnum,
-} from 'src/app/models/apartment-status.model';
-import { Review } from 'src/app/models/review.model';
 // Pipes
 import { TimestampToDateStringPipe } from 'src/app/pipes/timestampToDateString/timestamp-to-date-string.pipe';
 import { ReviewCountToNextTargetPipe } from 'src/app/pipes/reviewCountToNextTarget/review-count-to-next-target.pipe';
+import { BookingRoundNumberPipe } from 'src/app/pipes/bookingRoundNumber/booking-round-number.pipe';
+// Other
+import { StatusEnum } from 'src/app/models/apartment-status.model';
 @Component({
   selector: 'app-apartment-item',
   standalone: true,
@@ -57,11 +43,9 @@ import { ReviewCountToNextTargetPipe } from 'src/app/pipes/reviewCountToNextTarg
 export class ApartmentItemComponent {
   @Input() apartment = {} as Apartment;
   @Output() launchBookingPage = new EventEmitter();
-
-  location = inject(Location);
-  reviewsService = inject(ReviewsService);
-  dialogService = inject(DialogService);
-  apartmentService = inject(ApartmentService);
+  @Output() update = new EventEmitter();
+  @Output() edit = new EventEmitter();
+  @Output() delete = new EventEmitter();
 
   public dateFormat: Intl.DateTimeFormatOptions = {
     weekday: 'short',
@@ -80,40 +64,4 @@ export class ApartmentItemComponent {
     }
     return false;
   });
-
-  onUpdate() {
-    this.updating.set(true);
-    this.reviewsService.scrapeApartmentReviews(this.apartment.id).subscribe({
-      next: data =>
-        this.reviewsService
-          .addApartmentReviews(this.apartment.id, data)
-          .subscribe({
-            complete: () => this.updating.set(false),
-            error: error =>
-              console.error(
-                `Failed to add reviews to apartment ${this.apartment.id}`,
-                error
-              ),
-          }),
-      error: error => console.error('Error scraping apartment', error),
-    });
-  }
-
-  onEdit() {
-    this.dialogService.openDialog<ApartmentEditFormModalComponent>(
-      ApartmentEditFormModalComponent,
-      {
-        data: { id: this.apartment.id, name: this.apartment.name },
-      }
-    );
-  }
-
-  onDelete() {
-    this.dialogService.openDialog<ApartmentDeleteModalComponent>(
-      ApartmentDeleteModalComponent,
-      {
-        data: { id: this.apartment.id },
-      }
-    );
-  }
 }

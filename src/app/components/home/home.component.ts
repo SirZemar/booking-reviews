@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  WritableSignal,
   computed,
   inject,
 } from '@angular/core';
@@ -13,6 +14,11 @@ import { ApartmentListComponent } from '../apartment-list/apartment-list.compone
 import { ApartmentService } from 'src/app/services/apartment/apartment.service';
 import { SearchService } from 'src/app/services/search/search.service';
 import { Apartment } from 'src/app/models/apartment.model';
+import { ReviewsService } from 'src/app/services/reviews/reviews.service';
+import { DialogService } from 'src/app/services/dialog/dialog.service';
+// Modal components
+import { ApartmentEditFormModalComponent } from '../apartment-edit-form/apartment-edit-form.modal.component';
+import { ApartmentDeleteModalComponent } from '../apartment-delete/apartment-delete.modal.component';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -24,6 +30,9 @@ import { Apartment } from 'src/app/models/apartment.model';
 export class HomeComponent {
   apartmentService = inject(ApartmentService);
   searchService = inject(SearchService);
+  reviewsService = inject(ReviewsService);
+
+  dialogService = inject(DialogService);
 
   searchTerm = toSignal(this.searchService.search$, { initialValue: '' });
 
@@ -43,4 +52,41 @@ export class HomeComponent {
       '_blank'
     );
   }
+
+  onUpdate(event: [Apartment['id'], WritableSignal<boolean>]) {
+    const [apartmentId, updating] = event; //TODO Is temporary, should be replace after state managing refactor. Updating would be a value of apartment status
+    updating.set(true);
+    this.reviewsService.scrapeApartmentReviews(apartmentId).subscribe({
+      next: data =>
+        this.reviewsService.addApartmentReviews(apartmentId, data).subscribe({
+          complete: () => updating.set(false),
+          error: error =>
+            console.error(
+              `Failed to add reviews to apartment ${apartmentId}`,
+              error
+            ),
+        }),
+      error: error => console.error('Error scraping apartment', error),
+    });
+  }
+
+  onEdit(event: [Apartment['id'], apartmentName: Apartment['name']]) {
+    const [apartmentId, apartmentName] = event;
+    this.dialogService.openDialog<ApartmentEditFormModalComponent>(
+      ApartmentEditFormModalComponent,
+      {
+        data: { id: apartmentId, name: apartmentName },
+      }
+    );
+  }
+
+  onDelete(apartmentId: Apartment['id']) {
+    this.dialogService.openDialog<ApartmentDeleteModalComponent>(
+      ApartmentDeleteModalComponent,
+      {
+        data: { id: apartmentId },
+      }
+    );
+  }
 }
+

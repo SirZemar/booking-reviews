@@ -12,35 +12,48 @@
         }}</span>
         <div class="card__content__ratings__target">
           <mat-icon [ngStyle]="{ color: 'green' }">trending_up</mat-icon>
-          <span>{{ apartment.reviewsRatingAverage | reviewCountToNextTarget: apartment.reviewsCount }}</span>
+          <span>{{
+            apartment.reviewsRatingAverage
+              | reviewCountToNextTarget : apartment.reviewsCount
+          }}</span>
         </div>
       </ng-container>
     </div>
 
-    <button (click)="launchBookingPage.emit()" class="small-icon-button" mat-icon-button>
+    <button
+      (click)="launchBookingPage.emit()"
+      class="small-icon-button"
+      mat-icon-button>
       <mat-icon>launch</mat-icon>
     </button>
     <button
       class="small-icon-button"
       mat-icon-button
-      [matMenuTriggerFor]="menu"
-      aria-label="Example icon button with a vertical three dot icon">
+      [matMenuTriggerFor]="itemMenu"
+      aria-label="Icon button with a vertical three dot icon">
       <mat-icon [ngStyle]="{ scale: '1' }">more_vert</mat-icon>
     </button>
-    <mat-menu #menu="matMenu">
-      <button (click)="onUpdate()" mat-menu-item>Update</button>
-      <button (click)="onEdit()" mat-menu-item>Edit</button>
-      <button (click)="onDelete()" mat-menu-item>Delete</button>
+    <mat-menu #itemMenu="matMenu">
+      <ng-template matMenuContent>
+        <button (click)="update.emit(updating)" mat-menu-item>Update</button>
+        <button (click)="edit.emit()" mat-menu-item>Edit</button>
+        <button (click)="delete.emit()" mat-menu-item>Delete</button>
+      </ng-template>
     </mat-menu>
   </mat-card-content>
   <mat-card-content [ngStyle]="{ display: 'flex', gap: '20px' }">
     <ng-container *ngIf="!loading(); else loadingDetails">
-    <p><b>Last update: </b>{{ apartment.lastReviewsScrape | timestampToDateString: {dateFormat} }}</p>
-    <p><b>Total reviews: </b>{{ apartment.reviewsCount }}</p>
-    <p>
-      <b>Average: </b>{{ apartment.reviewsRatingAverage | number : '1.1-5' }}
-    </p>
-  </ng-container>
+      <p>
+        <b>Last update: </b
+        >{{
+          apartment.lastReviewsScrape | timestampToDateString : { dateFormat }
+        }}
+      </p>
+      <p><b>Total reviews: </b>{{ apartment.reviewsCount }}</p>
+      <p>
+        <b>Average: </b>{{ apartment.reviewsRatingAverage | number : '1.1-5' }}
+      </p>
+    </ng-container>
   </mat-card-content>
 </mat-card>
 

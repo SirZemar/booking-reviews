@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   Output,
+  WritableSignal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApartmentItemComponent } from '../apartment-item/apartment-item.component';
@@ -20,4 +21,7 @@ import { Apartment } from 'src/app/models/apartment.model';
 export class ApartmentListComponent {
   @Input({ required: true }) apartments: Apartment[] = [];
   @Output() launchBookingPage = new EventEmitter<Apartment['id']>();
+  @Output() updateItem = new EventEmitter<any>();
+  @Output() editItem = new EventEmitter<[Apartment['id'], Apartment['name']]>();
+  @Output() deleteItem = new EventEmitter<Apartment['id']>();
 }

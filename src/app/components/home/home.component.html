@@ -1,2 +1,8 @@
 <app-search-bar></app-search-bar>
-<app-apartment-list [apartments]="apartments()" (launchBookingPage)="navigateToUrl($event)"></app-apartment-list>
+<app-apartment-list
+  [apartments]="apartments()"
+  (launchBookingPage)="navigateToUrl($event)"
+  (updateItem)="onUpdate($event)"
+  (editItem)="onEdit($event)"
+  (deleteItem)="onDelete($event)"
+  ></app-apartment-list>
