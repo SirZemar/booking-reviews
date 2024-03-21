@@ -35,7 +35,7 @@
   </mat-card-content>
   <mat-card-content [ngStyle]="{ display: 'flex', gap: '20px' }">
     <ng-container *ngIf="!loading(); else loadingDetails">
-    <p><b>Last update: </b>{{ lastScrapeDate }}</p>
+    <p><b>Last update: </b>{{ apartment.lastReviewsScrape | timestampToDateString: {dateFormat} }}</p>
     <p><b>Total reviews: </b>{{ apartment.reviewsCount }}</p>
     <p>
       <b>Average: </b>{{ apartment.reviewsRatingAverage | number : '1.1-5' }}

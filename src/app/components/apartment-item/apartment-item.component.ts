@@ -31,6 +31,9 @@ import {
   StatusEnum,
 } from 'src/app/models/apartment-status.model';
 import { Review } from 'src/app/models/review.model';
+// Pipes
+import { TimestampToDateStringPipe } from 'src/app/pipes/timestampToDateString/timestamp-to-date-string.pipe';
+
 @Component({
   selector: 'app-apartment-item',
   standalone: true,
@@ -42,6 +45,7 @@ import { Review } from 'src/app/models/review.model';
     MatMenuModule,
     MatProgressSpinnerModule,
     BookingRoundNumberPipe,
+    TimestampToDateStringPipe,
   ],
   templateUrl: './apartment-item.component.html',
   styleUrls: ['./apartment-item.component.scss'],
@@ -55,8 +59,18 @@ export class ApartmentItemComponent {
   dialogService = inject(DialogService);
   apartmentService = inject(ApartmentService);
 
-  updating = signal(false);
-  loading = computed(() => {
+  public dateFormat: Intl.DateTimeFormatOptions = {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
+
+  public updating = signal(false);
+  public loading = computed(() => {
     if (this.apartment.status === StatusEnum.pending || this.updating()) {
       return true;
     }
@@ -65,34 +79,6 @@ export class ApartmentItemComponent {
 
   get reviewsCountToNextTarget(): number {
     return this.getReviewsCountToNextTarget();
-  }
-
-  get lastScrapeDate() {
-    return this.getLastScrapeDate();
-  }
-
-  // TODO Transform into dumb component
-  getLastScrapeDate() {
-    const timestamp = this.apartment?.lastReviewsScrape;
-    if (timestamp) {
-      const lastScrapeDate = new Timestamp(
-        timestamp._seconds,
-        timestamp._nanoseconds
-      ).toDate();
-
-      const options = {
-        weekday: 'short' as const,
-        year: 'numeric' as const,
-        month: 'short' as const,
-        day: 'numeric' as const,
-        hour: 'numeric' as const,
-        minute: 'numeric' as const,
-        hour12: true,
-      };
-      return new Date(lastScrapeDate).toLocaleString('en-US', options);
-    } else {
-      return '';
-    }
   }
 
   getReviewsCountToNextTarget() {
@@ -126,6 +112,8 @@ export class ApartmentItemComponent {
         (totalSum + 10 * reviewsCountToNextTarget) /
         (this.apartment.reviewsCount + reviewsCountToNextTarget);
     }
+
+    console.log(this.apartment);
 
     return reviewsCountToNextTarget;
     //TODO Not as accurate but faster
