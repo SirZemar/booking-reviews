@@ -12,7 +12,7 @@
         }}</span>
         <div class="card__content__ratings__target">
           <mat-icon [ngStyle]="{ color: 'green' }">trending_up</mat-icon>
-          <span>{{ reviewsCountToNextTarget }}</span>
+          <span>{{ apartment.reviewsRatingAverage | reviewCountToNextTarget: apartment.reviewsCount }}</span>
         </div>
       </ng-container>
     </div>

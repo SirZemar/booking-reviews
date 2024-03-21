@@ -33,7 +33,7 @@ import {
 import { Review } from 'src/app/models/review.model';
 // Pipes
 import { TimestampToDateStringPipe } from 'src/app/pipes/timestampToDateString/timestamp-to-date-string.pipe';
-
+import { ReviewCountToNextTargetPipe } from 'src/app/pipes/reviewCountToNextTarget/review-count-to-next-target.pipe';
 @Component({
   selector: 'app-apartment-item',
   standalone: true,
@@ -46,6 +46,7 @@ import { TimestampToDateStringPipe } from 'src/app/pipes/timestampToDateString/t
     MatProgressSpinnerModule,
     BookingRoundNumberPipe,
     TimestampToDateStringPipe,
+    ReviewCountToNextTargetPipe,
   ],
   templateUrl: './apartment-item.component.html',
   styleUrls: ['./apartment-item.component.scss'],
@@ -77,63 +78,6 @@ export class ApartmentItemComponent {
     return false;
   });
 
-  get reviewsCountToNextTarget(): number {
-    return this.getReviewsCountToNextTarget();
-  }
-
-  getReviewsCountToNextTarget() {
-    if (this.apartment.reviewsRatingAverage > 9.95) {
-      return 0;
-    }
-
-    let targetRateBeforeBookingRound = 0;
-    const reviewsRatingAverageTimes10 =
-      this.apartment.reviewsRatingAverage * 10;
-
-    if (
-      reviewsRatingAverageTimes10 - Math.floor(reviewsRatingAverageTimes10) >
-      0.5
-    ) {
-      targetRateBeforeBookingRound =
-        Math.floor(reviewsRatingAverageTimes10) / 10 + 0.1501;
-    } else {
-      targetRateBeforeBookingRound =
-        Math.floor(reviewsRatingAverageTimes10) / 10 + 0.0501;
-    }
-
-    const totalSum =
-      this.apartment.reviewsRatingAverage * this.apartment.reviewsCount;
-    let newReviewsAverage = this.apartment.reviewsRatingAverage;
-    let reviewsCountToNextTarget = 0;
-
-    while (newReviewsAverage <= targetRateBeforeBookingRound) {
-      reviewsCountToNextTarget++;
-      newReviewsAverage =
-        (totalSum + 10 * reviewsCountToNextTarget) /
-        (this.apartment.reviewsCount + reviewsCountToNextTarget);
-    }
-
-    console.log(this.apartment);
-
-    return reviewsCountToNextTarget;
-    //TODO Not as accurate but faster
-
-    // const targetReviewRating = parseFloat(
-    //   (this.apartment.reviewsRatingAverage + 0.1).toFixed(1)
-    // );
-    // const targetRateBeforeBookingRound = parseFloat(
-    //   (targetReviewRating - 0.05).toFixed(2)
-    // );
-
-    // const numberOfReviews = this.apartment.reviewsCount;
-    // const totalSum = this.apartment.reviewsRatingAverage * numberOfReviews;
-    // const numberOfTopRateReviewsNeeded = Math.ceil(
-    //   (targetRateBeforeBookingRound * numberOfReviews - totalSum) /
-    //     (10 - targetRateBeforeBookingRound)
-    // );
-
-    // return numberOfTopRateReviewsNeeded;
-  }
   navigateToUrl() {
     window.open(
       `https://www.booking.com/hotel/pt/${this.apartment.id}.pt-pt.html?aid=304142&label=gen173nr-1FCAEoggI46AdIM1gEaLsBiAEBmAEfuAEHyAEM2AEB6AEB-AEMiAIBqAIDuAKRo5usBsACAdICJDYwMzQ4ZDdjLTM5ZDUtNDMxZC05ZGZkLTY2NzQxNDY0YmYzNNgCBuACAQ&sid=ad4661baf04ea1012e4c76eaa4bde283&dest_id=-2173088;dest_type=city;dist=0;group_adults=1;group_children=0;hapos=1;hpos=1;no_rooms=1;req_adults=1;req_children=0;room1=A;sb_price_type=total;sr_order=popularity;srepoch=1703336399;srpvid=59a95b638872000f;type=total;ucfs=1&#hotelTmpl`,
