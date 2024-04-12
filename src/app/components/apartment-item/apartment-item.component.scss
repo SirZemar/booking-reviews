@@ -1,28 +1,27 @@
-
 .card__header {
-  align-items: flex-start;
-  justify-content: space-between;
+	align-items: flex-start;
+	justify-content: space-between;
 }
 
 .card__content__ratings {
-  white-space: nowrap;
-  width: 40%;;
-  display: flex;
-  align-items: center;
+	white-space: nowrap;
+	width: 40%;
+	display: flex;
+	align-items: center;
 
-  &__current {
-    font-size: xx-large;
-    padding: 0 10px;
-  }
+	&__current {
+		font-size: xx-large;
+		padding: 0 10px;
+	}
 
-  &__target {
-    display: flex;
-    align-items: flex-end;
-  }
+	&__target {
+		display: flex;
+		align-items: flex-end;
+	}
 }
 
-.loading-rating-average{
-  height: 40px;
-  width: 40px;
-  margin-left: 30px;
+.loading-rating-average {
+	height: 40px;
+	width: 40px;
+	margin-left: 30px;
 }

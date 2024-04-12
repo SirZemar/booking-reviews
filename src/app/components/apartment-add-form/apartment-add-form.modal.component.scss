@@ -1,42 +1,42 @@
 .card {
-  width: 400px;
-  height: 300px;
-  display: flex;
-  flex-direction: column;
-  max-width: 100%;
+	width: 400px;
+	height: 300px;
+	display: flex;
+	flex-direction: column;
+	max-width: 100%;
 
-  &__header {
-    display: grid;
-    place-self: center;
-    padding: 16px;
-  }
-  &__footer {
-    margin-top: auto;
+	&__header {
+		display: grid;
+		place-self: center;
+		padding: 16px;
+	}
+	&__footer {
+		margin-top: auto;
 
-    &__message {
-      color: red;
-    }
-  };
+		&__message {
+			color: red;
+		}
+	}
 
-  &__content {
-    height: 100%;
-    width: 80%;
-  }
+	&__content {
+		height: 100%;
+		width: 80%;
+	}
 }
 
 .form {
-  display: grid;
-  height: 100%;
-  &__field {
-    width: 100%;
-    height: min-content;
-  }
+	display: grid;
+	height: 100%;
+	&__field {
+		width: 100%;
+		height: min-content;
+	}
 }
 
 .hide {
-  display: none;
+	display: none;
 }
 
 .spinner {
-  place-self: center;
+	place-self: center;
 }
