@@ -1,41 +1,69 @@
 <mat-card class="card">
-  <mat-card-header class="card__header">
-    <mat-card-title>{{isLoading() ? 'Searching...' : 'Add Apartment' }}</mat-card-title>
-  </mat-card-header>
-  <mat-card-content class="card__content">
-    <form [formGroup]="form" class="form" (ngSubmit)="onSubmit()" id="apartmentDetailsForm">
-      <mat-form-field [ngClass]="isLoading() ? 'hide' : ''" class="form__id form__field" data-testId="form-field">
-        <mat-label class="form__id__label" data-testId="form-label"
-          >Apartment Id:</mat-label
-        >
-        <input
-          class="form__id__input"
-          formControlName="id"
-          matInput
-          type="text" />
-      </mat-form-field> 
-      <mat-form-field [ngClass]="isLoading() ? 'hide' : ''"  class="form__name form__field">
-        <mat-label class="form__name__label" data-testId="form-label"
-          >Choose a name for the apartment:</mat-label
-        >
-        <input 
-          class="form__name__input"
-          formControlName="name"
-          matInput
-          type="text" />
-      </mat-form-field>
-      <ng-container  *ngIf="isLoading(), then loading"></ng-container>
-    </form>
-  </mat-card-content>
-  <mat-card-footer class="card__footer">
-    <mat-card-actions [align]="'end'">
-      <span *ngIf="temporaryMessage$ | async as temporaryMessage" [@enterAnimation] class="card__footer__message">{{temporaryMessage}}</span>
-      <button form="apartmentDetailsForm" [disabled]="isLoading()" mat-button type="submit">Add</button>
-      <button form="apartmentDetailsForm" (click)="requestCancel()" type="button" mat-button>Cancel</button>
-    </mat-card-actions>
-  </mat-card-footer>
+	<mat-card-header class="card__header">
+		<mat-card-title>{{
+			isLoading() ? 'Searching...' : 'Add Apartment'
+		}}</mat-card-title>
+	</mat-card-header>
+	<mat-card-content class="card__content">
+		<form
+			[formGroup]="form"
+			class="form"
+			(ngSubmit)="onSubmit()"
+			id="apartmentDetailsForm">
+			<mat-form-field
+				[ngClass]="isLoading() ? 'hide' : ''"
+				class="form__id form__field"
+				data-testId="form-field">
+				<mat-label class="form__id__label" data-testId="form-label"
+					>Apartment Id:</mat-label
+				>
+				<input
+					class="form__id__input"
+					formControlName="id"
+					matInput
+					type="text" />
+			</mat-form-field>
+			<mat-form-field
+				[ngClass]="isLoading() ? 'hide' : ''"
+				class="form__name form__field">
+				<mat-label class="form__name__label" data-testId="form-label"
+					>Choose a name for the apartment:</mat-label
+				>
+				<input
+					class="form__name__input"
+					formControlName="name"
+					matInput
+					type="text" />
+			</mat-form-field>
+			<ng-container *ngIf="isLoading(); then loading"></ng-container>
+		</form>
+	</mat-card-content>
+	<mat-card-footer class="card__footer">
+		<mat-card-actions [align]="'end'">
+			<span
+				*ngIf="temporaryMessage$ | async as temporaryMessage"
+				[@enterAnimation]
+				class="card__footer__message"
+				>{{ temporaryMessage }}</span
+			>
+			<button
+				form="apartmentDetailsForm"
+				[disabled]="isLoading()"
+				mat-button
+				type="submit">
+				Add
+			</button>
+			<button
+				form="apartmentDetailsForm"
+				(click)="requestCancel()"
+				type="button"
+				mat-button>
+				Cancel
+			</button>
+		</mat-card-actions>
+	</mat-card-footer>
 </mat-card>
 
 <ng-template #loading>
-  <mat-spinner class="spinner"></mat-spinner>
+	<mat-spinner class="spinner"></mat-spinner>
 </ng-template>

@@ -1,11 +1,11 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  computed,
-  signal,
+	ChangeDetectionStrategy,
+	Component,
+	EventEmitter,
+	Input,
+	Output,
+	computed,
+	signal,
 } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 // Material Components
@@ -23,45 +23,45 @@ import { BookingRoundNumberPipe } from 'src/app/pipes/bookingRoundNumber/booking
 // Other
 import { StatusEnum } from 'src/app/models/apartment-status.model';
 @Component({
-  selector: 'app-apartment-item',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-    MatProgressSpinnerModule,
-    BookingRoundNumberPipe,
-    TimestampToDateStringPipe,
-    ReviewCountToNextTargetPipe,
-  ],
-  templateUrl: './apartment-item.component.html',
-  styleUrls: ['./apartment-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: 'app-apartment-item',
+	standalone: true,
+	imports: [
+		CommonModule,
+		MatCardModule,
+		MatButtonModule,
+		MatIconModule,
+		MatMenuModule,
+		MatProgressSpinnerModule,
+		BookingRoundNumberPipe,
+		TimestampToDateStringPipe,
+		ReviewCountToNextTargetPipe,
+	],
+	templateUrl: './apartment-item.component.html',
+	styleUrls: ['./apartment-item.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApartmentItemComponent {
-  @Input() apartment = {} as Apartment;
-  @Output() launchBookingPage = new EventEmitter();
-  @Output() update = new EventEmitter();
-  @Output() edit = new EventEmitter();
-  @Output() delete = new EventEmitter();
+	@Input() apartment = {} as Apartment;
+	@Output() launchBookingPage = new EventEmitter();
+	@Output() update = new EventEmitter();
+	@Output() edit = new EventEmitter();
+	@Output() delete = new EventEmitter();
 
-  public dateFormat: Intl.DateTimeFormatOptions = {
-    weekday: 'short',
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true,
-  };
+	public dateFormat: Intl.DateTimeFormatOptions = {
+		weekday: 'short',
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric',
+		hour12: true,
+	};
 
-  public updating = signal(false);
-  public loading = computed(() => {
-    if (this.apartment.status === StatusEnum.pending || this.updating()) {
-      return true;
-    }
-    return false;
-  });
+	public updating = signal(false);
+	public loading = computed(() => {
+		if (this.apartment.status === StatusEnum.pending || this.updating()) {
+			return true;
+		}
+		return false;
+	});
 }

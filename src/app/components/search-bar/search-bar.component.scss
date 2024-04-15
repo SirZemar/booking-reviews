@@ -1,28 +1,27 @@
 .padding {
-  padding: 30px;
+	padding: 30px;
 }
 
 .search-bar-container {
-  position: fixed;
-  width: 100%;
-  z-index: 100;
-  top: 0;
-  height: 55px;
-  box-shadow: 0 2px 7px 2px rgb(0, 0, 0, 0.5);
+	position: fixed;
+	width: 100%;
+	z-index: 100;
+	top: 0;
+	height: 55px;
+	box-shadow: 0 2px 7px 2px rgb(0, 0, 0, 0.5);
 
-  .search-bar-form {
-    display: flex;
-    align-items: center;
-    .search-bar {
-      width: 100%;
-      
+	.search-bar-form {
+		display: flex;
+		align-items: center;
+		.search-bar {
+			width: 100%;
 
-      &_label {
-        background-color: red;
-      }
-      button {
-        margin: 0 5px;
-      }
-    }
-  }
+			&_label {
+				background-color: red;
+			}
+			button {
+				margin: 0 5px;
+			}
+		}
+	}
 }
