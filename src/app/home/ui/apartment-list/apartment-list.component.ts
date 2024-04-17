@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApartmentItemComponent } from '../apartment-item/apartment-item.component';
-import { SortApartmentsPipe } from 'src/app/pipes/sortApartments/sort-apartments.pipe';
-import { Apartment } from 'src/app/models/apartment.model';
+import { SortApartmentsPipe } from 'src/app/shared/pipes/sortApartments/sort-apartments.pipe';
+import { Apartment } from 'src/app/shared/models/apartment.model';
 @Component({
 	selector: 'app-apartment-list',
 	templateUrl: './apartment-list.component.html',

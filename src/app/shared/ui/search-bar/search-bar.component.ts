@@ -3,7 +3,6 @@ import {
 	Component,
 	HostListener,
 	inject,
-	signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
@@ -14,9 +13,9 @@ import {
 	FormControl,
 } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { SearchService } from 'src/app/services/search/search.service';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
-import { ApartmentAddFormModalComponent } from '../apartment-add-form/apartment-add-form.modal.component';
+import { SearchService } from 'src/app/shared/services/search/search.service';
+import { DialogService } from 'src/app/shared/services/dialog/dialog.service';
+import { ApartmentAddFormModalComponent } from '../../../home/ui/apartment-add-form/apartment-add-form.modal.component';
 
 @Component({
 	selector: 'app-search-bar',

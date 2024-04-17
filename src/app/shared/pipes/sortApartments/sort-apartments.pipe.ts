@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Apartment } from 'src/app/models/apartment.model';
+import { Apartment } from 'src/app/shared/models/apartment.model';
 
 @Pipe({
 	name: 'sortApartments',
