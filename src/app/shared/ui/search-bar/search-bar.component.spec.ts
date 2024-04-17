@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms'; // Add this import
 import { MatIconModule } from '@angular/material/icon'; // Add this import
 import { MatInputModule } from '@angular/material/input'; // Add this import
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { runOnPushDetection } from '../../../utils.testing';
+import { runOnPushDetection } from '../../../../utils.testing';
 
 describe('SearchBarComponent', () => {
 	let component: SearchBarComponent;

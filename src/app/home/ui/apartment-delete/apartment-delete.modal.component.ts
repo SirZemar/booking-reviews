@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApartmentService } from 'src/app/services/apartment/apartment.service';
+import { ApartmentService } from 'src/app/shared/services/apartment/apartment.service';
 // Angular material components
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';

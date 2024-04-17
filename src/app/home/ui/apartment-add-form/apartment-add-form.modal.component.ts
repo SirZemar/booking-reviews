@@ -20,9 +20,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { ApartmentService } from 'src/app/services/apartment/apartment.service';
+import { ApartmentService } from 'src/app/shared/services/apartment/apartment.service';
 import { Subject, Subscription, concat, delay, of, switchMap } from 'rxjs';
-import { ReviewsService } from 'src/app/services/reviews/reviews.service';
+import { ReviewsService } from 'src/app/shared/services/reviews/reviews.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({

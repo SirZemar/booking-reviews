@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { reviewsEndpoints } from 'src/apis/reviews';
+import { reviewsEndpoints } from 'src/app/apis/reviews';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { ApartmentService } from '../apartment/apartment.service';
-import { Review } from 'src/app/models/review.model';
+import { Review } from 'src/app/shared/models/review.model';
 
 @Injectable({
 	providedIn: 'root',
