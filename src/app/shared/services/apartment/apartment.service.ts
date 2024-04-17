@@ -1,8 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { apartmentEndpoints } from 'src/apis/apartment';
-import { Apartment } from 'src/app/models/apartment.model';
+import { apartmentEndpoints } from 'src/app/apis/apartment';
+import { Apartment } from 'src/app/shared/models/apartment.model';
 import { SearchService } from '../search/search.service';
 @Injectable({
 	providedIn: 'root',

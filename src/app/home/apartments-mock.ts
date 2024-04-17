@@ -1,6 +1,6 @@
 import { Timestamp } from '@firebase/firestore';
-import { StatusEnum } from 'src/app/models/apartment-status.model';
-import { Apartment } from 'src/app/models/apartment.model';
+import { StatusEnum } from 'src/app/shared/models/apartment-status.model';
+import { Apartment } from 'src/app/shared/models/apartment.model';
 
 const time1: any = new Timestamp(2313123, 21321321);
 (time1._seconds = 2313123), (time1._nanoseconds = 21321321);

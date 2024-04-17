@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Timestamp } from 'src/app/models/timestamp.model';
+import { Timestamp } from 'src/app/shared/models/timestamp.model';
 import { Timestamp as FirestoreTimestamp } from '@firebase/firestore';
 
 @Pipe({

@@ -15,13 +15,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Models
-import { Apartment } from 'src/app/models/apartment.model';
+import { Apartment } from 'src/app/shared/models/apartment.model';
 // Pipes
-import { TimestampToDateStringPipe } from 'src/app/pipes/timestampToDateString/timestamp-to-date-string.pipe';
-import { ReviewCountToNextTargetPipe } from 'src/app/pipes/reviewCountToNextTarget/review-count-to-next-target.pipe';
-import { BookingRoundNumberPipe } from 'src/app/pipes/bookingRoundNumber/booking-round-number.pipe';
+import { TimestampToDateStringPipe } from 'src/app/shared/pipes/timestampToDateString/timestamp-to-date-string.pipe';
+import { ReviewCountToNextTargetPipe } from 'src/app/shared/pipes/reviewCountToNextTarget/review-count-to-next-target.pipe';
+import { BookingRoundNumberPipe } from 'src/app/shared/pipes/bookingRoundNumber/booking-round-number.pipe';
 // Other
-import { StatusEnum } from 'src/app/models/apartment-status.model';
+import { StatusEnum } from 'src/app/shared/models/apartment-status.model';
 @Component({
 	selector: 'app-apartment-item',
 	standalone: true,

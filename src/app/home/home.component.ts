@@ -8,17 +8,17 @@ import {
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 // Components
-import { SearchBarComponent } from '../search-bar/search-bar.component';
-import { ApartmentListComponent } from '../apartment-list/apartment-list.component';
+import { SearchBarComponent } from '../shared/ui/search-bar/search-bar.component';
+import { ApartmentListComponent } from './ui/apartment-list/apartment-list.component';
 // Services
-import { ApartmentService } from 'src/app/services/apartment/apartment.service';
-import { SearchService } from 'src/app/services/search/search.service';
-import { Apartment } from 'src/app/models/apartment.model';
-import { ReviewsService } from 'src/app/services/reviews/reviews.service';
-import { DialogService } from 'src/app/services/dialog/dialog.service';
+import { ApartmentService } from 'src/app/shared/services/apartment/apartment.service';
+import { SearchService } from 'src/app/shared/services/search/search.service';
+import { Apartment } from 'src/app/shared/models/apartment.model';
+import { ReviewsService } from 'src/app/shared/services/reviews/reviews.service';
+import { DialogService } from 'src/app/shared/services/dialog/dialog.service';
 // Modal components
-import { ApartmentEditFormModalComponent } from '../apartment-edit-form/apartment-edit-form.modal.component';
-import { ApartmentDeleteModalComponent } from '../apartment-delete/apartment-delete.modal.component';
+import { ApartmentEditFormModalComponent } from './ui/apartment-edit-form/apartment-edit-form.modal.component';
+import { ApartmentDeleteModalComponent } from './ui/apartment-delete/apartment-delete.modal.component';
 @Component({
 	selector: 'app-home',
 	standalone: true,
