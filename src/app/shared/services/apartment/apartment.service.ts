@@ -16,7 +16,7 @@ export class ApartmentService {
 	public apartments = this.apartmentsSignal.asReadonly();
 
 	get getInitialApartments() {
-		let apartments = [] as Apartment[];
+		const apartments = [] as Apartment[];
 		this.getApartments().subscribe({
 			next: apartments => apartments,
 			complete: () => console.log('Initial apartments fetch'),

@@ -26,13 +26,3 @@ export class TimestampToDateStringPipe implements PipeTransform {
 		}
 	}
 }
-
-const options = {
-	weekday: 'short' as const,
-	year: 'numeric' as const,
-	month: 'short' as const,
-	day: 'numeric' as const,
-	hour: 'numeric' as const,
-	minute: 'numeric' as const,
-	hour12: true,
-};

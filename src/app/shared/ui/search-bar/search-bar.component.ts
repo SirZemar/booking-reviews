@@ -64,12 +64,11 @@ export class SearchBarComponent {
 	}
 
 	openDialog(): void {
-		const dialogRef =
-			this.dialogService.openDialog<ApartmentAddFormModalComponent>(
-				ApartmentAddFormModalComponent,
-				{
-					data: { id: this.form.get('apartmentId')?.value },
-				}
-			);
+		this.dialogService.openDialog<ApartmentAddFormModalComponent>(
+			ApartmentAddFormModalComponent,
+			{
+				data: { id: this.form.get('apartmentId')?.value },
+			}
+		);
 	}
 }

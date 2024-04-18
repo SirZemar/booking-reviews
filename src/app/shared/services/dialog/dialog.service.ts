@@ -1,3 +1,4 @@
+import { ComponentType } from '@angular/cdk/portal';
 import { Injectable, inject } from '@angular/core';
 import {
 	MatDialog,
@@ -12,11 +13,14 @@ import { Observable } from 'rxjs';
 export class DialogService {
 	private dialog = inject(MatDialog);
 
-	openDialog<T>(component: any, config?: MatDialogConfig): MatDialogRef<T> {
+	openDialog<T>(
+		component: ComponentType<T>,
+		config?: MatDialogConfig
+	): MatDialogRef<T> {
 		return this.dialog.open<T>(component, config);
 	}
 
-	afterClosed<T>(dialogRef: MatDialogRef<T>): Observable<any> {
+	afterClosed<T>(dialogRef: MatDialogRef<T>): Observable<unknown> {
 		return dialogRef.afterClosed();
 	}
 }

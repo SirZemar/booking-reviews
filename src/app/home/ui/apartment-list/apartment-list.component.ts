@@ -4,7 +4,6 @@ import {
 	EventEmitter,
 	Input,
 	Output,
-	WritableSignal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApartmentItemComponent } from '../apartment-item/apartment-item.component';
