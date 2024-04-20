@@ -11,3 +11,8 @@ export type Apartment = {
 	name: string;
 	status: ApartmentStatus;
 };
+
+// For responses to DELETE, UPDATE, and CREATE requests
+export interface ActionResponse {
+	msg: string;
+}

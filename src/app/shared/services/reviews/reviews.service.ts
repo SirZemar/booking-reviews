@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { ApartmentService } from '../apartment/apartment.service';
 import { Review } from 'src/app/shared/models/review.model';
+import { ActionResponse } from '../../models/apartment.model';
 
 @Injectable({
 	providedIn: 'root',
@@ -23,9 +24,12 @@ export class ReviewsService {
 			);
 	}
 
-	addApartmentReviews(apartmentId: string, reviews: Review[]) {
+	addApartmentReviews(
+		apartmentId: string,
+		reviews: Review[]
+	): Observable<ActionResponse> {
 		return this.http
-			.post(reviewsEndpoints.addReviews(apartmentId), reviews)
+			.post<ActionResponse>(reviewsEndpoints.addReviews(apartmentId), reviews)
 			.pipe(
 				tap(() => this.apartmentService.patchApartmentSignal(apartmentId)),
 				catchError(error => {

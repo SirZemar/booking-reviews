@@ -114,7 +114,7 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
 				)
 			)
 			.subscribe({
-				next: (data: any) => console.log(`${data.msg}`),
+				next: data => console.log(`${data.msg}`),
 				complete: () => console.log('Finished scraping apartment'),
 				error: error =>
 					console.log('Error adding or scraping apartment', error),

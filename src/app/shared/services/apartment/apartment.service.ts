@@ -2,7 +2,10 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { apartmentEndpoints } from 'src/app/apis/apartment';
-import { Apartment } from 'src/app/shared/models/apartment.model';
+import {
+	ActionResponse,
+	Apartment,
+} from 'src/app/shared/models/apartment.model';
 import { SearchService } from '../search/search.service';
 @Injectable({
 	providedIn: 'root',
@@ -37,34 +40,49 @@ export class ApartmentService {
 		return this.http.get<Apartment>(apartmentEndpoints.getApartmentById(id));
 	}
 
-	addApartment(id: string, payload: Pick<Apartment, 'name'>) {
-		return this.http.post(apartmentEndpoints.addApartment(id), payload).pipe(
-			tap(() => this.addApartmentSignal(id)),
-			catchError(error => {
-				console.error(`Error adding apartment ${id}`, error);
-				return throwError(() => new Error(error));
-			})
-		);
+	addApartment(
+		id: string,
+		payload: Pick<Apartment, 'name'>
+	): Observable<ActionResponse> {
+		return this.http
+			.post<ActionResponse>(apartmentEndpoints.addApartment(id), payload)
+			.pipe(
+				tap(() => this.addApartmentSignal(id)),
+				catchError(error => {
+					console.error(`Error adding apartment ${id}`, error);
+					return throwError(() => new Error(error));
+				})
+			);
 	}
 
-	patchApartment(id: string, body: Partial<Apartment>) {
-		return this.http.patch(apartmentEndpoints.patchApartment(id), body).pipe(
-			tap(() => this.patchApartmentSignal(id)),
-			catchError(error => {
-				console.error(`Error editing apartment ${id} with body ${body}`, error);
-				return throwError(() => new Error(error));
-			})
-		);
+	patchApartment(
+		id: string,
+		body: Partial<Apartment>
+	): Observable<ActionResponse> {
+		return this.http
+			.patch<ActionResponse>(apartmentEndpoints.patchApartment(id), body)
+			.pipe(
+				tap(() => this.patchApartmentSignal(id)),
+				catchError(error => {
+					console.error(
+						`Error editing apartment ${id} with body ${body}`,
+						error
+					);
+					return throwError(() => new Error(error));
+				})
+			);
 	}
 
-	deleteApartment(id: string) {
-		return this.http.delete(apartmentEndpoints.deleteApartment(id)).pipe(
-			tap(() => this.deleteApartmentSignal(id)),
-			catchError(error => {
-				console.error(`Error deleting apartment ${id}`, error);
-				return throwError(() => new Error(error));
-			})
-		);
+	deleteApartment(id: string): Observable<ActionResponse> {
+		return this.http
+			.delete<ActionResponse>(apartmentEndpoints.deleteApartment(id))
+			.pipe(
+				tap(() => this.deleteApartmentSignal(id)),
+				catchError(error => {
+					console.error(`Error deleting apartment ${id}`, error);
+					return throwError(() => new Error(error));
+				})
+			);
 	}
 
 	private addApartmentSignal(id: string) {
