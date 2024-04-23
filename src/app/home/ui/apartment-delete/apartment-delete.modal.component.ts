@@ -11,6 +11,7 @@ import { ApartmentService } from 'src/app/shared/services/apartment/apartment.se
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { finalize } from 'rxjs';
+import { DeleteApartment } from 'src/app/shared/models/apartment.model';
 
 @Component({
 	selector: 'app-apartment-delete',
@@ -25,12 +26,12 @@ export class ApartmentDeleteModalComponent {
 
 	constructor(
 		public dialogRef: MatDialogRef<ApartmentDeleteModalComponent>,
-		@Inject(MAT_DIALOG_DATA) private data: any
+		@Inject(MAT_DIALOG_DATA) private apartmentData: DeleteApartment
 	) {}
 
 	confirmDelete() {
 		this.apartmentService
-			.deleteApartment(this.data.id)
+			.deleteApartment(this.apartmentData.id)
 			.pipe(
 				finalize(() => {
 					this.dialogRef.close();

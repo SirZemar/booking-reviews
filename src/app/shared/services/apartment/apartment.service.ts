@@ -16,7 +16,7 @@ export class ApartmentService {
 	public apartments = this.apartmentsSignal.asReadonly();
 
 	get getInitialApartments() {
-		const apartments = [] as Apartment[];
+		let apartments = [] as Apartment[];
 		this.getApartments().subscribe({
 			next: apartments => apartments,
 			complete: () => console.log('Initial apartments fetch'),
@@ -57,7 +57,7 @@ export class ApartmentService {
 		);
 	}
 
-	deleteApartment(id: string) {
+	deleteApartment(id: Apartment['id']) {
 		return this.http.delete(apartmentEndpoints.deleteApartment(id)).pipe(
 			tap(() => this.deleteApartmentSignal(id)),
 			catchError(error => {

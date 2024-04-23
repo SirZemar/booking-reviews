@@ -13,7 +13,11 @@ import { ApartmentListComponent } from './ui/apartment-list/apartment-list.compo
 // Services
 import { ApartmentService } from 'src/app/shared/services/apartment/apartment.service';
 import { SearchService } from 'src/app/shared/services/search/search.service';
-import { Apartment } from 'src/app/shared/models/apartment.model';
+import {
+	Apartment,
+	DeleteApartment,
+	EditApartment,
+} from 'src/app/shared/models/apartment.model';
 import { ReviewsService } from 'src/app/shared/services/reviews/reviews.service';
 import { DialogService } from 'src/app/shared/services/dialog/dialog.service';
 // Modal components
@@ -70,21 +74,20 @@ export class HomeComponent {
 		});
 	}
 
-	onEdit(event: [Apartment['id'], apartmentName: Apartment['name']]) {
-		const [apartmentId, apartmentName] = event;
+	onEdit(apartmentData: EditApartment) {
 		this.dialogService.openDialog<ApartmentEditFormModalComponent>(
 			ApartmentEditFormModalComponent,
 			{
-				data: { id: apartmentId, name: apartmentName },
+				data: { id: apartmentData.id, name: apartmentData.name },
 			}
 		);
 	}
 
-	onDelete(apartmentId: Apartment['id']) {
+	onDelete(apartmentData: DeleteApartment) {
 		this.dialogService.openDialog<ApartmentDeleteModalComponent>(
 			ApartmentDeleteModalComponent,
 			{
-				data: { id: apartmentId },
+				data: { id: apartmentData.id },
 			}
 		);
 	}

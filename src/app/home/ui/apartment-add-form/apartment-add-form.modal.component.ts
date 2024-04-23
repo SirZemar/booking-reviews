@@ -24,6 +24,7 @@ import { ApartmentService } from 'src/app/shared/services/apartment/apartment.se
 import { Subject, Subscription, concat, delay, of, switchMap } from 'rxjs';
 import { ReviewsService } from 'src/app/shared/services/reviews/reviews.service';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { AddApartment } from 'src/app/shared/models/apartment.model';
 
 @Component({
 	selector: 'app-apartment-add-form',
@@ -76,7 +77,7 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
 
 	constructor(
 		public dialogRef: MatDialogRef<ApartmentAddFormModalComponent>,
-		@Inject(MAT_DIALOG_DATA) private apartment: any
+		@Inject(MAT_DIALOG_DATA) private apartment: AddApartment
 	) {}
 
 	onSubmit() {

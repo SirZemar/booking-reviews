@@ -11,3 +11,7 @@ export type Apartment = {
 	name: string;
 	status: ApartmentStatus;
 };
+
+export type AddApartment = Pick<Apartment, 'id' | 'name'>;
+export type EditApartment = Pick<Apartment, 'id' | 'name'>;
+export type DeleteApartment = Pick<Apartment, 'id'>;
