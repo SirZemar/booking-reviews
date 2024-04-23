@@ -24,6 +24,7 @@ import { ApartmentService } from 'src/app/shared/services/apartment/apartment.se
 import { Subject, Subscription, concat, delay, of, switchMap } from 'rxjs';
 import { ReviewsService } from 'src/app/shared/services/reviews/reviews.service';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { AddApartment } from 'src/app/shared/models/apartment.model';
 
 @Component({
 	selector: 'app-apartment-add-form',
@@ -68,7 +69,7 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
 
 	form = this.fb.group({
 		id: new FormControl(
-			{ value: this.apartment.id, disabled: true },
+			{ value: this.apartmentData.id, disabled: true },
 			Validators.required
 		),
 		name: new FormControl(''),
@@ -76,7 +77,7 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
 
 	constructor(
 		public dialogRef: MatDialogRef<ApartmentAddFormModalComponent>,
-		@Inject(MAT_DIALOG_DATA) private apartment: any
+		@Inject(MAT_DIALOG_DATA) private apartmentData: AddApartment
 	) {}
 
 	onSubmit() {
@@ -86,7 +87,7 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
 			.apartments()
 			.find(
 				apartment =>
-					apartment.id.toLowerCase() === this.apartment.id.toLowerCase()
+					apartment.id.toLowerCase() === this.apartmentData.id.toLowerCase()
 			);
 
 		if (apartmentExist) {
@@ -97,20 +98,20 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
 
 		this.subscription = this.apartmentService
 			.addApartment(
-				this.apartment.id,
-				name ? { name } : { name: this.apartment.id }
+				this.apartmentData.id,
+				name ? { name } : { name: this.apartmentData.id }
 			)
 			.pipe(
 				switchMap(() => {
 					console.log(
-						`Apartment added successfully. Now scraping reviews with id ${this.apartment.id}`
+						`Apartment added successfully. Now scraping reviews with id ${this.apartmentData.id}`
 					);
 					this.isLoading.set(false);
 					this.dialogRef.close();
-					return this.reviewsService.scrapeApartmentReviews(this.apartment.id);
+					return this.reviewsService.scrapeApartmentReviews(this.apartmentData.id);
 				}),
 				switchMap(reviews =>
-					this.reviewsService.addApartmentReviews(this.apartment.id, reviews)
+					this.reviewsService.addApartmentReviews(this.apartmentData.id, reviews)
 				)
 			)
 			.subscribe({

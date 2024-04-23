@@ -42,12 +42,12 @@ export class SearchBarComponent {
 	label = 'Booking Page Name';
 
 	form = this.fb.group({
-		apartmentId: new FormControl(''),
+		apartmentId: new FormControl('', { nonNullable: true }),
 	});
 
 	onSearch(): void {
-		const searchTerm = this.form.get('apartmentId')?.value;
-		this.searchService.setSearchTerm(searchTerm ?? '');
+		const searchTerm = this.form.get('apartmentId')!.value;
+		this.searchService.setSearchTerm(searchTerm);
 	}
 
 	onSubmit(): void {
@@ -59,7 +59,7 @@ export class SearchBarComponent {
 	}
 
 	onReset(): void {
-		this.form.reset({ apartmentId: '' });
+		this.form.reset();
 		this.onSearch();
 	}
 
@@ -67,7 +67,7 @@ export class SearchBarComponent {
 		this.dialogService.openDialog<ApartmentAddFormModalComponent>(
 			ApartmentAddFormModalComponent,
 			{
-				data: { id: this.form.get('apartmentId')?.value },
+				data: { id: this.form.get('apartmentId')!.value },
 			}
 		);
 	}

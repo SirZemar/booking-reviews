@@ -16,3 +16,6 @@ export type Apartment = {
 export interface ActionResponse {
 	msg: string;
 }
+export type AddApartment = Pick<Apartment, 'id' | 'name'>;
+export type EditApartment = Pick<Apartment, 'id' | 'name'>;
+export type DeleteApartment = Pick<Apartment, 'id'>;

@@ -23,6 +23,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ApartmentService } from 'src/app/shared/services/apartment/apartment.service';
 import { Subscription, finalize } from 'rxjs';
 import { ReviewsService } from 'src/app/shared/services/reviews/reviews.service';
+import { EditApartment } from 'src/app/shared/models/apartment.model';
 
 @Component({
 	selector: 'app-apartment-edit-form',
@@ -49,15 +50,15 @@ export class ApartmentEditFormModalComponent implements OnDestroy {
 
 	form = this.fb.group({
 		id: new FormControl(
-			{ value: this.data.id, disabled: true },
+			{ value: this.apartmentData.id, disabled: true },
 			Validators.required
 		),
-		name: new FormControl(this.data.name),
+		name: new FormControl(this.apartmentData.name),
 	});
 
 	constructor(
 		public dialogRef: MatDialogRef<ApartmentEditFormModalComponent>,
-		@Inject(MAT_DIALOG_DATA) private data: any
+		@Inject(MAT_DIALOG_DATA) private apartmentData: EditApartment
 	) {}
 
 	onSubmit() {
@@ -65,7 +66,9 @@ export class ApartmentEditFormModalComponent implements OnDestroy {
 		const name = this.form.get('name')?.value;
 
 		this.subscription = this.apartmentService
-			.patchApartment(this.data.id, { name: name ? name : this.data.id })
+			.patchApartment(this.apartmentData.id, {
+				name: name ? name : this.apartmentData.id,
+			})
 			.pipe(
 				finalize(() => {
 					this.isLoading.set(false);

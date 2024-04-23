@@ -73,16 +73,14 @@ export class ApartmentService {
 			);
 	}
 
-	deleteApartment(id: string): Observable<ActionResponse> {
-		return this.http
-			.delete<ActionResponse>(apartmentEndpoints.deleteApartment(id))
-			.pipe(
-				tap(() => this.deleteApartmentSignal(id)),
-				catchError(error => {
-					console.error(`Error deleting apartment ${id}`, error);
-					return throwError(() => new Error(error));
-				})
-			);
+	deleteApartment(id: Apartment['id']): Observable<ActionResponse> {
+		return this.http.delete<ActionResponse>(apartmentEndpoints.deleteApartment(id)).pipe(
+			tap(() => this.deleteApartmentSignal(id)),
+			catchError(error => {
+				console.error(`Error deleting apartment ${id}`, error);
+				return throwError(() => new Error(error));
+			})
+		);
 	}
 
 	private addApartmentSignal(id: string) {
