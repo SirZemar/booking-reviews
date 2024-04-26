@@ -1,7 +1,6 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
-	OnDestroy,
 	inject,
 	signal,
 } from '@angular/core';
@@ -21,8 +20,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { ApartmentService } from 'src/app/shared/services/apartment/apartment.service';
-import { Subscription, finalize } from 'rxjs';
-import { ReviewsService } from 'src/app/shared/services/reviews/reviews.service';
 import { EditApartment } from 'src/app/shared/models/apartment.model';
 
 @Component({
@@ -41,12 +38,11 @@ import { EditApartment } from 'src/app/shared/models/apartment.model';
 	styleUrls: ['./apartment-edit-form.modal.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApartmentEditFormModalComponent implements OnDestroy {
+export class ApartmentEditFormModalComponent {
 	fb = inject(FormBuilder);
 	apartmentService = inject(ApartmentService);
-	reviewsService = inject(ReviewsService);
-	subscription: Subscription = new Subscription();
-	isLoading = signal(false);
+
+	isLoading = signal(false); // TODO Replace for apartment status
 
 	form = this.fb.group({
 		id: new FormControl(
@@ -62,32 +58,16 @@ export class ApartmentEditFormModalComponent implements OnDestroy {
 	) {}
 
 	onSubmit() {
-		this.isLoading.set(true);
 		const name = this.form.get('name')?.value;
+		this.apartmentService.editApartment$.next({
+			id: this.apartmentData.id,
+			name: name ? name : this.apartmentData.id,
+		});
 
-		this.subscription = this.apartmentService
-			.patchApartment(this.apartmentData.id, {
-				name: name ? name : this.apartmentData.id,
-			})
-			.pipe(
-				finalize(() => {
-					this.isLoading.set(false);
-					this.dialogRef.close();
-				})
-			)
-			.subscribe({
-				next: () => {
-					console.log(`Apartment edited successfully`);
-				},
-				error: error => console.log('Error editing apartment', error),
-			});
+		this.dialogRef.close(); // TODO should wait for apartment patch
 	}
 
 	requestCancel() {
 		this.dialogRef.close();
-	}
-
-	ngOnDestroy(): void {
-		this.subscription.unsubscribe();
 	}
 }

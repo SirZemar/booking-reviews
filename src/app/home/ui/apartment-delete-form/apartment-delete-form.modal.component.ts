@@ -10,40 +10,27 @@ import { ApartmentService } from 'src/app/shared/services/apartment/apartment.se
 // Angular material components
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { finalize } from 'rxjs';
 import { DeleteApartment } from 'src/app/shared/models/apartment.model';
 
 @Component({
 	selector: 'app-apartment-delete',
 	standalone: true,
 	imports: [CommonModule, MatButtonModule, MatCardModule],
-	templateUrl: './apartment-delete.modal.component.html',
-	styleUrls: ['./apartment-delete.modal.component.scss'],
+	templateUrl: './apartment-delete-form.modal.component.html',
+	styleUrls: ['./apartment-delete-form.modal.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApartmentDeleteModalComponent {
+export class ApartmentDeleteFormModalComponent {
 	apartmentService = inject(ApartmentService);
 
 	constructor(
-		public dialogRef: MatDialogRef<ApartmentDeleteModalComponent>,
+		public dialogRef: MatDialogRef<ApartmentDeleteFormModalComponent>,
 		@Inject(MAT_DIALOG_DATA) private apartmentData: DeleteApartment
 	) {}
 
 	confirmDelete() {
-		this.apartmentService
-			.deleteApartment(this.apartmentData.id)
-			.pipe(
-				finalize(() => {
-					this.dialogRef.close();
-				})
-			)
-			.subscribe({
-				next: () => {
-					console.log(`Apartment deleted successfully`);
-				},
-				error: error => console.log('Error deleting apartment', error),
-				complete: () => console.log('Delete apartment completed'),
-			});
+		this.apartmentService.deleteApartment$.next(this.apartmentData);
+		this.dialogRef.close(); // TODO Should wait for status to complete deletion
 	}
 
 	rejectDelete() {

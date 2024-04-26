@@ -6,7 +6,7 @@
 		</mat-card-title-group>
 
 		<div class="card__content__ratings">
-			<ng-container *ngIf="!loading(); else loadingRatingAverage">
+			<ng-container *ngIf="apartment.reviewStatus === 'ready'; else loadingRatingAverage">
 				<span class="card__content__ratings__current">{{
 					apartment.reviewsRatingAverage | bookingRoundNumber
 				}}</span>
@@ -35,14 +35,14 @@
 		</button>
 		<mat-menu #itemMenu="matMenu">
 			<ng-template matMenuContent>
-				<button (click)="update.emit(updating)" mat-menu-item>Update</button>
+				<button (click)="update.emit()" mat-menu-item>Update</button>
 				<button (click)="edit.emit()" mat-menu-item>Edit</button>
 				<button (click)="delete.emit()" mat-menu-item>Delete</button>
 			</ng-template>
 		</mat-menu>
 	</mat-card-content>
 	<mat-card-content [ngStyle]="{ display: 'flex', gap: '20px' }">
-		<ng-container *ngIf="!loading(); else loadingDetails">
+		<ng-container *ngIf="apartment.reviewStatus === 'ready'; else loadingDetails">
 			<p>
 				<b>Last update: </b
 				>{{

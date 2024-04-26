@@ -1,44 +1,50 @@
 import { Injectable, inject } from '@angular/core';
 import { reviewsEndpoints } from 'src/app/apis/reviews';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, tap, throwError } from 'rxjs';
-import { ApartmentService } from '../apartment/apartment.service';
+import { Observable, Subject, Subscription, switchMap } from 'rxjs';
 import { Review } from 'src/app/shared/models/review.model';
-import { ActionResponse } from '../../models/apartment.model';
+import { ActionResponse, UpdateApartment } from '../../models/apartment.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class ReviewsService {
 	http = inject(HttpClient);
-	apartmentService = inject(ApartmentService);
+
+	updateReviews$ = new Subject<UpdateApartment>();
+	reviewsUpdateComplete$ = new Subject<UpdateApartment>();
+
+	subscription: Subscription | undefined;
+
+	constructor() {
+		this.updateReviews$.pipe(takeUntilDestroyed()).subscribe(apartmentData => {
+			if (this.subscription) {
+				this.subscription.unsubscribe();
+			}
+			this.subscription = this.scrapeApartmentReviews(apartmentData.id)
+				.pipe(
+					switchMap(reviews =>
+						this.addApartmentReviews(apartmentData.id, reviews)
+					)
+				)
+				.subscribe({
+					next: () => this.reviewsUpdateComplete$.next(apartmentData),
+				});
+		});
+	}
 
 	scrapeApartmentReviews(apartmentId: string): Observable<Review[]> {
-		return this.http
-			.get<Review[]>(reviewsEndpoints.scrapeReviews(apartmentId))
-			.pipe(
-				catchError(error => {
-					console.error('Error scraping apartment:', error);
-					return throwError(() => new Error(error));
-				})
-			);
+		return this.http.get<Review[]>(reviewsEndpoints.scrapeReviews(apartmentId));
 	}
 
 	addApartmentReviews(
 		apartmentId: string,
 		reviews: Review[]
 	): Observable<ActionResponse> {
-		return this.http
-			.post<ActionResponse>(reviewsEndpoints.addReviews(apartmentId), reviews)
-			.pipe(
-				tap(() => this.apartmentService.patchApartmentSignal(apartmentId)),
-				catchError(error => {
-					console.error(
-						`Failed to add reviews ${reviews} to apartment ${apartmentId}:`,
-						error
-					);
-					return throwError(() => new Error(error));
-				})
-			);
+		return this.http.post<ActionResponse>(
+			reviewsEndpoints.addReviews(apartmentId),
+			reviews
+		);
 	}
 }

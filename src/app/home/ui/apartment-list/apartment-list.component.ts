@@ -4,7 +4,6 @@ import {
 	EventEmitter,
 	Input,
 	Output,
-	WritableSignal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApartmentItemComponent } from '../apartment-item/apartment-item.component';
@@ -13,6 +12,7 @@ import {
 	Apartment,
 	DeleteApartment,
 	EditApartment,
+	UpdateApartment,
 } from 'src/app/shared/models/apartment.model';
 @Component({
 	selector: 'app-apartment-list',
@@ -25,9 +25,7 @@ import {
 export class ApartmentListComponent {
 	@Input({ required: true }) apartments: Apartment[] = [];
 	@Output() launchBookingPage = new EventEmitter<Apartment['id']>();
-	@Output() updateItem = new EventEmitter<
-		[Apartment['id'], WritableSignal<boolean>]
-	>(); //TODO refactor signal status
+	@Output() updateItem = new EventEmitter<UpdateApartment>();
 	@Output() editItem = new EventEmitter<EditApartment>();
 	@Output() deleteItem = new EventEmitter<DeleteApartment>();
 }
