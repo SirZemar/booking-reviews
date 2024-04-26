@@ -1,7 +1,6 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
-	OnDestroy,
 	inject,
 	signal,
 } from '@angular/core';
@@ -21,8 +20,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { ApartmentService } from 'src/app/shared/services/apartment/apartment.service';
-import { Subject, Subscription, concat, delay, of, switchMap } from 'rxjs';
-import { ReviewsService } from 'src/app/shared/services/reviews/reviews.service';
+import { Subject, concat, delay, of, switchMap } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AddApartment } from 'src/app/shared/models/apartment.model';
 
@@ -54,13 +52,11 @@ import { AddApartment } from 'src/app/shared/models/apartment.model';
 	styleUrls: ['./apartment-add-form.modal.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApartmentAddFormModalComponent implements OnDestroy {
+export class ApartmentAddFormModalComponent {
 	fb = inject(FormBuilder);
 	apartmentService = inject(ApartmentService);
-	reviewsService = inject(ReviewsService);
-	subscription = new Subscription();
 
-	isLoading = signal(false);
+	isLoading = signal(false); // TODO Replace for apartment statu
 
 	private temporaryMessageSubject = new Subject<string>();
 	temporaryMessage$ = this.temporaryMessageSubject.pipe(
@@ -72,7 +68,7 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
 			{ value: this.apartmentData.id, disabled: true },
 			Validators.required
 		),
-		name: new FormControl(''),
+		name: new FormControl('', { nonNullable: true }),
 	});
 
 	constructor(
@@ -81,8 +77,7 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
 	) {}
 
 	onSubmit() {
-		this.isLoading.set(true);
-		const name = this.form.get('name')?.value;
+		const name = this.form.get('name')!.value;
 		const apartmentExist = this.apartmentService
 			.apartments()
 			.find(
@@ -91,44 +86,18 @@ export class ApartmentAddFormModalComponent implements OnDestroy {
 			);
 
 		if (apartmentExist) {
-			this.isLoading.set(false);
-			this.temporaryMessageSubject.next('Apartment already exist!');
-			return;
+			return this.temporaryMessageSubject.next('Apartment already exist!');
 		}
 
-		this.subscription = this.apartmentService
-			.addApartment(
-				this.apartmentData.id,
-				name ? { name } : { name: this.apartmentData.id }
-			)
-			.pipe(
-				switchMap(() => {
-					console.log(
-						`Apartment added successfully. Now scraping reviews with id ${this.apartmentData.id}`
-					);
-					this.isLoading.set(false);
-					this.dialogRef.close();
-					return this.reviewsService.scrapeApartmentReviews(this.apartmentData.id);
-				}),
-				switchMap(reviews =>
-					this.reviewsService.addApartmentReviews(this.apartmentData.id, reviews)
-				)
-			)
-			.subscribe({
-				next: data => console.log(`${data.msg}`),
-				complete: () => console.log('Finished scraping apartment'),
-				error: error =>
-					console.log('Error adding or scraping apartment', error),
-			});
+		this.apartmentService.addApartment$.next({
+			id: this.apartmentData.id,
+			name: name.trim() ? name : this.apartmentData.id,
+		});
+
+		this.dialogRef.close(); //TODO should wait for apartment creation
 	}
 
 	requestCancel() {
 		this.dialogRef.close();
-	}
-
-	ngOnDestroy(): void {
-		if (this.isLoading()) {
-			this.subscription.unsubscribe();
-		}
 	}
 }

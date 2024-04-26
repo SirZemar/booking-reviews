@@ -1,7 +1,6 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
-	WritableSignal,
 	computed,
 	inject,
 } from '@angular/core';
@@ -17,12 +16,13 @@ import {
 	Apartment,
 	DeleteApartment,
 	EditApartment,
+	UpdateApartment,
 } from 'src/app/shared/models/apartment.model';
 import { ReviewsService } from 'src/app/shared/services/reviews/reviews.service';
 import { DialogService } from 'src/app/shared/services/dialog/dialog.service';
 // Modal components
 import { ApartmentEditFormModalComponent } from './ui/apartment-edit-form/apartment-edit-form.modal.component';
-import { ApartmentDeleteModalComponent } from './ui/apartment-delete/apartment-delete.modal.component';
+import { ApartmentDeleteFormModalComponent } from './ui/apartment-delete-form/apartment-delete-form.modal.component';
 @Component({
 	selector: 'app-home',
 	standalone: true,
@@ -57,21 +57,8 @@ export class HomeComponent {
 		);
 	}
 
-	onUpdate(event: [Apartment['id'], WritableSignal<boolean>]) {
-		const [apartmentId, updating] = event; //TODO Is temporary, should be replace after state managing refactor. Updating would be a value of apartment status
-		updating.set(true);
-		this.reviewsService.scrapeApartmentReviews(apartmentId).subscribe({
-			next: data =>
-				this.reviewsService.addApartmentReviews(apartmentId, data).subscribe({
-					complete: () => updating.set(false),
-					error: error =>
-						console.error(
-							`Failed to add reviews to apartment ${apartmentId}`,
-							error
-						),
-				}),
-			error: error => console.error('Error scraping apartment', error),
-		});
+	onUpdate(apartmentData: UpdateApartment) {
+		this.reviewsService.updateReviews$.next(apartmentData);
 	}
 
 	onEdit(apartmentData: EditApartment) {
@@ -84,8 +71,8 @@ export class HomeComponent {
 	}
 
 	onDelete(apartmentData: DeleteApartment) {
-		this.dialogService.openDialog<ApartmentDeleteModalComponent>(
-			ApartmentDeleteModalComponent,
+		this.dialogService.openDialog<ApartmentDeleteFormModalComponent>(
+			ApartmentDeleteFormModalComponent,
 			{
 				data: { id: apartmentData.id },
 			}

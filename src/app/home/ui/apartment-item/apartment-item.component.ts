@@ -4,8 +4,6 @@ import {
 	EventEmitter,
 	Input,
 	Output,
-	computed,
-	signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // Material Components
@@ -20,8 +18,7 @@ import { Apartment } from 'src/app/shared/models/apartment.model';
 import { TimestampToDateStringPipe } from 'src/app/shared/pipes/timestampToDateString/timestamp-to-date-string.pipe';
 import { ReviewCountToNextTargetPipe } from 'src/app/shared/pipes/reviewCountToNextTarget/review-count-to-next-target.pipe';
 import { BookingRoundNumberPipe } from 'src/app/shared/pipes/bookingRoundNumber/booking-round-number.pipe';
-// Other
-import { StatusEnum } from 'src/app/shared/models/apartment-status.model';
+
 @Component({
 	selector: 'app-apartment-item',
 	standalone: true,
@@ -56,12 +53,4 @@ export class ApartmentItemComponent {
 		minute: 'numeric',
 		hour12: true,
 	};
-
-	public updating = signal(false);
-	public loading = computed(() => {
-		if (this.apartment.status === StatusEnum.pending || this.updating()) {
-			return true;
-		}
-		return false;
-	});
 }

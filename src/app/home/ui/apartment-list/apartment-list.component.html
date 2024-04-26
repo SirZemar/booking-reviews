@@ -3,7 +3,7 @@
 		<app-apartment-item
 			[apartment]="apartment"
 			(launchBookingPage)="launchBookingPage.emit(apartment.id)"
-			(update)="updateItem.emit([apartment.id, $event])"
+			(update)="updateItem.emit({id: apartment.id})"
 			(edit)="editItem.emit({id: apartment.id, name: apartment.name})"
 			(delete)="deleteItem.emit({id: apartment.id})">
 		</app-apartment-item>

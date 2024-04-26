@@ -1,6 +1,6 @@
 import { Timestamp } from '../shared/models/timestamp.model';
 import { Timestamp as FsTimestamp } from '@firebase/firestore';
-import { StatusEnum } from 'src/app/shared/models/apartment-status.model';
+import { ReviewStatusEnum } from 'src/app/shared/models/apartment-status.model';
 import { Apartment } from 'src/app/shared/models/apartment.model';
 
 const lastReviewScrapeDateMock1: Partial<Timestamp> = new FsTimestamp(
@@ -26,7 +26,7 @@ export const apartmentsMock: Apartment[] = [
 			{ id: '01', rate: 9.0, date: lastReviewScrapeDateMock1 as Timestamp },
 		],
 		reviewsCount: 200,
-		status: StatusEnum.ready,
+		status: ReviewStatusEnum.READY,
 		reviewsRatingAverage: 9.0,
 	},
 	{
@@ -37,7 +37,7 @@ export const apartmentsMock: Apartment[] = [
 			{ id: '02', rate: 9.2, date: lastReviewScrapeDateMock2 as Timestamp },
 		],
 		reviewsCount: 20,
-		status: StatusEnum.ready,
+		status: ReviewStatusEnum.READY,
 		reviewsRatingAverage: 9.2,
 	},
 ];
