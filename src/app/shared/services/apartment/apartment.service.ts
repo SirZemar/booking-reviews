@@ -68,46 +68,38 @@ export class ApartmentService {
 		this.reviewsService.reviewsUpdateComplete$
 			.pipe(takeUntilDestroyed())
 			.subscribe(apartmentData => {
-				this.getApartmentById(apartmentData.id)
-					.pipe(
-						tap(updatedApartment =>
-							this.state.update(state => ({
-								...state,
-								apartments: state.apartments.map(apartment =>
-									apartment.id === updatedApartment.id
-										? {
-												...updatedApartment,
-												reviewStatus: ReviewStatusEnum.READY,
-											}
-										: apartment
-								),
-							}))
-						)
-					)
-					.subscribe();
+				this.getApartmentById(apartmentData.id).subscribe(
+					(updatedApartment: Apartment) => {
+						this.state.update(state => ({
+							...state,
+							apartments: state.apartments.map(apartment =>
+								apartment.id === updatedApartment.id
+									? {
+											...updatedApartment,
+											reviewStatus: apartmentData.reviewStatus!,
+										}
+									: apartment
+							),
+						}));
+					}
+				);
 			});
 
 		// Update local state when apartment update reviews
 		this.reviewsService.updateReviews$
 			.pipe(takeUntilDestroyed())
 			.subscribe(apartmentData =>
-				this.getApartmentById(apartmentData.id)
-					.pipe(
-						tap(updatedApartment => {
-							this.state.update(state => ({
-								...state,
-								apartments: state.apartments.map(apartment =>
-									apartment.id === updatedApartment.id
-										? {
-												...updatedApartment,
-												reviewStatus: ReviewStatusEnum.UPDATING,
-											}
-										: apartment
-								),
-							}));
-						})
-					)
-					.subscribe()
+				this.state.update(state => ({
+					...state,
+					apartments: state.apartments.map(apartment =>
+						apartment.id === apartmentData.id
+							? {
+									...apartment,
+									reviewStatus: ReviewStatusEnum.UPDATING,
+								}
+							: apartment
+					),
+				}))
 			);
 
 		// Adds apartment
@@ -117,11 +109,13 @@ export class ApartmentService {
 				tap(apartmentData =>
 					this.state.update(state => ({
 						...state,
-						apartments: state.apartments.map(apartment =>
-							apartment.id === apartmentData.id
-								? { ...apartment, status: ApartmentStatusEnum.CREATING }
-								: apartment
-						),
+						apartments: [
+							...state.apartments,
+							{
+								...apartmentData,
+								status: ApartmentStatusEnum.CREATING,
+							} as Apartment,
+						],
 					}))
 				)
 			)
@@ -129,17 +123,14 @@ export class ApartmentService {
 				this.addApartment(apartmentData)
 					.pipe(
 						switchMap(response => this.getApartmentById(response.id)),
-						tap(apartment =>
+						tap(newApartment =>
 							this.state.update(state => ({
 								...state,
-								apartments: [
-									...state.apartments,
-									{
-										...apartment,
-										reviewStatus: ReviewStatusEnum.UPDATING,
-										status: ApartmentStatusEnum.READY,
-									},
-								],
+								apartments: state.apartments.map(apartment =>
+									apartment.id === apartmentData.id
+										? { ...newApartment, status: ApartmentStatusEnum.READY }
+										: apartment
+								),
 							}))
 						)
 					)
@@ -150,7 +141,19 @@ export class ApartmentService {
 
 		// Deletes
 		this.deleteApartment$
-			.pipe(takeUntilDestroyed())
+			.pipe(
+				takeUntilDestroyed(),
+				tap(apartmentData =>
+					this.state.update(state => ({
+						...state,
+						apartments: state.apartments.map(apartment =>
+							apartment.id === apartmentData.id
+								? { ...apartment, status: ApartmentStatusEnum.DELETING }
+								: apartment
+						),
+					}))
+				)
+			)
 			.subscribe(apartmentData => {
 				this.deleteApartment(apartmentData)
 					.pipe(
@@ -166,23 +169,37 @@ export class ApartmentService {
 					.subscribe();
 			});
 
-		this.editApartment$.pipe(takeUntilDestroyed()).subscribe(apartmentData => {
-			this.patchApartment(apartmentData)
-				.pipe(
-					switchMap(response => this.getApartmentById(response.id)),
-					tap(patchedApartment =>
-						this.state.update(state => ({
-							...state,
-							apartments: state.apartments.map(apartment =>
-								apartment.id === patchedApartment.id
-									? patchedApartment
-									: apartment
-							),
-						}))
-					)
+		this.editApartment$
+			.pipe(
+				takeUntilDestroyed(),
+				tap(editedApartment =>
+					this.state.update(state => ({
+						...state,
+						apartments: state.apartments.map(apartment =>
+							apartment.id === editedApartment.id
+								? { ...apartment, status: ApartmentStatusEnum.PATCHING }
+								: apartment
+						),
+					}))
 				)
-				.subscribe();
-		});
+			)
+			.subscribe(apartmentData => {
+				this.patchApartment(apartmentData)
+					.pipe(
+						switchMap(response => this.getApartmentById(response.id)),
+						tap(patchedApartment =>
+							this.state.update(state => ({
+								...state,
+								apartments: state.apartments.map(apartment =>
+									apartment.id === patchedApartment.id
+										? { ...patchedApartment, status: ApartmentStatusEnum.READY }
+										: apartment
+								),
+							}))
+						)
+					)
+					.subscribe();
+			});
 	}
 
 	private getApartments(): Observable<Apartment[]> {

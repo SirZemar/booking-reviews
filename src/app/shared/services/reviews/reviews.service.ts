@@ -5,6 +5,7 @@ import { Observable, Subject, Subscription, switchMap } from 'rxjs';
 import { Review } from 'src/app/shared/models/review.model';
 import { ActionResponse, UpdateApartment } from '../../models/apartment.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ReviewStatusEnum } from '../../models/apartment-status.model';
 
 @Injectable({
 	providedIn: 'root',
@@ -29,7 +30,16 @@ export class ReviewsService {
 					)
 				)
 				.subscribe({
-					next: () => this.reviewsUpdateComplete$.next(apartmentData),
+					next: () =>
+						this.reviewsUpdateComplete$.next({
+							...apartmentData,
+							reviewStatus: ReviewStatusEnum.READY,
+						}),
+					error: () =>
+						this.reviewsUpdateComplete$.next({
+							...apartmentData,
+							reviewStatus: ReviewStatusEnum.FAILED,
+						}),
 				});
 		});
 	}

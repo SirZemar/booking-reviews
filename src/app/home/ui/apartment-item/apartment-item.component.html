@@ -6,18 +6,17 @@
 		</mat-card-title-group>
 
 		<div class="card__content__ratings">
-			<ng-container *ngIf="apartment.reviewStatus === 'ready'; else loadingRatingAverage">
-				<span class="card__content__ratings__current">{{
-					apartment.reviewsRatingAverage | bookingRoundNumber
-				}}</span>
-				<div class="card__content__ratings__target">
-					<mat-icon [ngStyle]="{ color: 'green' }">trending_up</mat-icon>
-					<span>{{
-						apartment.reviewsRatingAverage
-							| reviewCountToNextTarget: apartment.reviewsCount
-					}}</span>
-				</div>
-			</ng-container>
+			@switch (apartment.reviewStatus) {
+				@case ('ready') {
+					<ng-container [ngTemplateOutlet]="ReadyRatingAverage"></ng-container>
+				}
+				@case ('failed') {
+					<ng-container [ngTemplateOutlet]="FailRatingAverage"></ng-container>
+				}
+				@case ('updating') {
+				<ng-container [ngTemplateOutlet]="UpdatingRatingAverage"></ng-container>
+				}
+			}
 		</div>
 
 		<button
@@ -42,42 +41,55 @@
 		</mat-menu>
 	</mat-card-content>
 	<mat-card-content [ngStyle]="{ display: 'flex', gap: '20px' }">
-		<ng-container *ngIf="apartment.reviewStatus === 'ready'; else loadingDetails">
-			<p>
-				<b>Last update: </b
-				>{{
-					apartment.lastReviewsScrape | timestampToDateString: { dateFormat }
-				}}
-			</p>
-			<p><b>Total reviews: </b>{{ apartment.reviewsCount }}</p>
-			<p>
-				<b>Average: </b>{{ apartment.reviewsRatingAverage | number: '1.1-5' }}
-			</p>
-		</ng-container>
+		@switch (apartment.reviewStatus) {
+			@case ('ready') {
+				<ng-container [ngTemplateOutlet]="ReadyReviewsDetails"></ng-container>
+			}
+			@default {
+				<ng-container [ngTemplateOutlet]="UpdatingReviewsDetails"></ng-container>
+			}
+		}
 	</mat-card-content>
 </mat-card>
 
-<ng-template #loadingRatingAverage>
+<ng-template #UpdatingRatingAverage>
 	<mat-spinner
 		style="height: 40px; width: 40px; margin-left: 30px"
 		aria-label="Loading rating average..."></mat-spinner>
 </ng-template>
 
-<ng-template #loadingDetails>
+<ng-template #FailRatingAverage>
+	<p>Failed to update reviews</p>
+</ng-template>
+
+<ng-template #ReadyRatingAverage>
+	<span class="card__content__ratings__current">{{
+		apartment.reviewsRatingAverage | bookingRoundNumber
+	}}</span>
+	<div class="card__content__ratings__target">
+		<mat-icon [ngStyle]="{ color: 'green' }">trending_up</mat-icon>
+		<span>{{
+			apartment.reviewsRatingAverage
+				| reviewCountToNextTarget: apartment.reviewsCount
+		}}</span>
+	</div>
+</ng-template>
+
+<ng-template #ReadyReviewsDetails>
+	<p>
+		<b>Last update: </b
+		>{{
+			apartment.lastReviewsScrape | timestampToDateString: { dateFormat }
+		}}
+	</p>
+	<p><b>Total reviews: </b>{{ apartment.reviewsCount }}</p>
+	<p>
+		<b>Average: </b>{{ apartment.reviewsRatingAverage | number: '1.1-5' }}
+	</p>
+</ng-template>
+
+<ng-template #UpdatingReviewsDetails>
 	<p><b>Last update: </b>---</p>
 	<p><b>Total reviews: </b>---</p>
 	<p><b>Average: </b>---</p>
 </ng-template>
-
-<!-- 
-  <p><b>Last update: </b>{{ loading() ? '---' : lastScrapeDate }}</p>
-    <p>
-      <b>Total reviews: </b>{{ loading() ? '---' : apartment.reviewsCount }}
-    </p>
-    <p>
-      <b>Average: </b
-      >{{
-        loading() ? '---' : (apartment.reviewsRatingAverage | number : '1.1-5')
-      }}
-    </p>
-   -->

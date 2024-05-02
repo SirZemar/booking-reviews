@@ -1,6 +1,8 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
+	computed,
+	effect,
 	inject,
 	signal,
 } from '@angular/core';
@@ -21,7 +23,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { ApartmentService } from 'src/app/shared/services/apartment/apartment.service';
 import { EditApartment } from 'src/app/shared/models/apartment.model';
-
+import { ApartmentStatusEnum } from 'src/app/shared/models/apartment-status.model';
 @Component({
 	selector: 'app-apartment-edit-form',
 	standalone: true,
@@ -42,8 +44,6 @@ export class ApartmentEditFormModalComponent {
 	fb = inject(FormBuilder);
 	apartmentService = inject(ApartmentService);
 
-	isLoading = signal(false); // TODO Replace for apartment status
-
 	form = this.fb.group({
 		id: new FormControl(
 			{ value: this.apartmentData.id, disabled: true },
@@ -52,19 +52,34 @@ export class ApartmentEditFormModalComponent {
 		name: new FormControl(this.apartmentData.name),
 	});
 
+	private close = signal(false);
+	apartment = computed(() =>
+		this.apartmentService
+			.apartments()
+			.find(apart => apart.id === this.apartmentData.id)
+	);
+
 	constructor(
 		public dialogRef: MatDialogRef<ApartmentEditFormModalComponent>,
 		@Inject(MAT_DIALOG_DATA) private apartmentData: EditApartment
-	) {}
+	) {
+		effect(() => {
+			if (
+				this.apartment()?.status === ApartmentStatusEnum.READY &&
+				this.close()
+			) {
+				this.dialogRef.close();
+			}
+		});
+	}
 
 	onSubmit() {
-		const name = this.form.get('name')?.value;
+		const name = this.form.value.name;
 		this.apartmentService.editApartment$.next({
 			id: this.apartmentData.id,
 			name: name ? name : this.apartmentData.id,
 		});
-
-		this.dialogRef.close(); // TODO should wait for apartment patch
+		this.close.set(true);
 	}
 
 	requestCancel() {

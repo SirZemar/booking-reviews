@@ -21,4 +21,6 @@ export interface ActionResponse {
 export type AddApartment = Pick<Apartment, 'id' | 'name'>;
 export type EditApartment = Pick<Apartment, 'id' | 'name'>;
 export type DeleteApartment = Pick<Apartment, 'id'>;
-export type UpdateApartment = Pick<Apartment, 'id'>;
+export type UpdateApartment = Pick<Apartment, 'id'> &
+	Partial<Pick<Apartment, 'reviewStatus'>>;
+

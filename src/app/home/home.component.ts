@@ -13,6 +13,7 @@ import { ApartmentListComponent } from './ui/apartment-list/apartment-list.compo
 import { ApartmentService } from 'src/app/shared/services/apartment/apartment.service';
 import { SearchService } from 'src/app/shared/services/search/search.service';
 import {
+	AddApartment,
 	Apartment,
 	DeleteApartment,
 	EditApartment,
@@ -23,6 +24,7 @@ import { DialogService } from 'src/app/shared/services/dialog/dialog.service';
 // Modal components
 import { ApartmentEditFormModalComponent } from './ui/apartment-edit-form/apartment-edit-form.modal.component';
 import { ApartmentDeleteFormModalComponent } from './ui/apartment-delete-form/apartment-delete-form.modal.component';
+import { ApartmentAddFormModalComponent } from './ui/apartment-add-form/apartment-add-form.modal.component';
 @Component({
 	selector: 'app-home',
 	standalone: true,
@@ -61,6 +63,14 @@ export class HomeComponent {
 		this.reviewsService.updateReviews$.next(apartmentData);
 	}
 
+	onCreate(apartmentData: AddApartment) {
+		this.dialogService.openDialog<ApartmentAddFormModalComponent>(
+			ApartmentAddFormModalComponent,
+			{
+				data: { id: apartmentData.id, name: apartmentData.name },
+			}
+		);
+	}
 	onEdit(apartmentData: EditApartment) {
 		this.dialogService.openDialog<ApartmentEditFormModalComponent>(
 			ApartmentEditFormModalComponent,
