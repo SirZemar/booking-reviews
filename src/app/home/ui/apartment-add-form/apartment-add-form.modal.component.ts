@@ -1,6 +1,8 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
+	computed,
+	effect,
 	inject,
 	signal,
 } from '@angular/core';
@@ -23,6 +25,7 @@ import { ApartmentService } from 'src/app/shared/services/apartment/apartment.se
 import { Subject, concat, delay, of, switchMap } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AddApartment } from 'src/app/shared/models/apartment.model';
+import { ApartmentStatusEnum } from 'src/app/shared/models/apartment-status.model';
 
 @Component({
 	selector: 'app-apartment-add-form',
@@ -56,7 +59,12 @@ export class ApartmentAddFormModalComponent {
 	fb = inject(FormBuilder);
 	apartmentService = inject(ApartmentService);
 
-	isLoading = signal(false); // TODO Replace for apartment statu
+	apartment = computed(() =>
+		this.apartmentService
+			.apartments()
+			.find(apart => apart.id === this.apartmentData.id)
+	);
+	private close = signal(false);
 
 	private temporaryMessageSubject = new Subject<string>();
 	temporaryMessage$ = this.temporaryMessageSubject.pipe(
@@ -70,11 +78,19 @@ export class ApartmentAddFormModalComponent {
 		),
 		name: new FormControl('', { nonNullable: true }),
 	});
-
 	constructor(
 		public dialogRef: MatDialogRef<ApartmentAddFormModalComponent>,
 		@Inject(MAT_DIALOG_DATA) private apartmentData: AddApartment
-	) {}
+	) {
+		effect(() => {
+			if (
+				this.apartment()?.status === ApartmentStatusEnum.READY &&
+				this.close()
+			) {
+				this.dialogRef.close();
+			}
+		});
+	}
 
 	onSubmit() {
 		const name = this.form.get('name')!.value;
@@ -93,8 +109,7 @@ export class ApartmentAddFormModalComponent {
 			id: this.apartmentData.id,
 			name: name.trim() ? name : this.apartmentData.id,
 		});
-
-		this.dialogRef.close(); //TODO should wait for apartment creation
+		this.close.set(true);
 	}
 
 	requestCancel() {

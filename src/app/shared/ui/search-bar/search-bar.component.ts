@@ -1,7 +1,9 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
+	EventEmitter,
 	HostListener,
+	Output,
 	inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -14,8 +16,7 @@ import {
 } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { SearchService } from 'src/app/shared/services/search/search.service';
-import { DialogService } from 'src/app/shared/services/dialog/dialog.service';
-import { ApartmentAddFormModalComponent } from '../../../home/ui/apartment-add-form/apartment-add-form.modal.component';
+import { AddApartment } from '../../models/apartment.model';
 
 @Component({
 	selector: 'app-search-bar',
@@ -35,9 +36,10 @@ export class SearchBarComponent {
 	@HostListener('document:keydown.escape') onEscapeKeydownHandler() {
 		this.onReset();
 	}
+	@Output() create = new EventEmitter<AddApartment>();
 	fb = inject(FormBuilder);
 	searchService = inject(SearchService);
-	dialogService = inject(DialogService);
+	// dialogService = inject(DialogService);
 
 	label = 'Booking Page Name';
 
@@ -53,7 +55,7 @@ export class SearchBarComponent {
 	onSubmit(): void {
 		const apartmentId = this.form.value.apartmentId;
 		if (apartmentId) {
-			this.openDialog();
+			this.create.emit({ id: apartmentId, name: '' });
 			this.onReset();
 		}
 	}
@@ -63,12 +65,12 @@ export class SearchBarComponent {
 		this.onSearch();
 	}
 
-	openDialog(): void {
-		this.dialogService.openDialog<ApartmentAddFormModalComponent>(
-			ApartmentAddFormModalComponent,
-			{
-				data: { id: this.form.get('apartmentId')!.value },
-			}
-		);
-	}
+	// openDialog(): void {
+	// 	this.dialogService.openDialog<ApartmentAddFormModalComponent>(
+	// 		ApartmentAddFormModalComponent,
+	// 		{
+	// 			data: { id: this.form.get('apartmentId')!.value },
+	// 		}
+	// 	);
+	// }
 }

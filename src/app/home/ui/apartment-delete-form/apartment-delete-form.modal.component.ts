@@ -2,7 +2,10 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	Inject,
+	computed,
+	effect,
 	inject,
+	signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -22,15 +25,27 @@ import { DeleteApartment } from 'src/app/shared/models/apartment.model';
 })
 export class ApartmentDeleteFormModalComponent {
 	apartmentService = inject(ApartmentService);
+	apartment = computed(() =>
+		this.apartmentService
+			.apartments()
+			.find(apart => apart.id === this.apartmentData.id)
+	);
+	close = signal(false);
 
 	constructor(
 		public dialogRef: MatDialogRef<ApartmentDeleteFormModalComponent>,
 		@Inject(MAT_DIALOG_DATA) private apartmentData: DeleteApartment
-	) {}
+	) {
+		effect(() => {
+			if (!this.apartment() && this.close()) {
+				this.dialogRef.close();
+			}
+		});
+	}
 
 	confirmDelete() {
 		this.apartmentService.deleteApartment$.next(this.apartmentData);
-		this.dialogRef.close(); // TODO Should wait for status to complete deletion
+		this.close.set(true);
 	}
 
 	rejectDelete() {

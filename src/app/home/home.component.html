@@ -1,4 +1,4 @@
-<app-search-bar></app-search-bar>
+<app-search-bar (create)="onCreate($event)"></app-search-bar>
 <app-apartment-list
 	[apartments]="apartments()"
 	(launchBookingPage)="navigateToUrl($event)"
