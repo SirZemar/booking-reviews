@@ -4,7 +4,7 @@ import { isDevMode } from '@angular/core';
 const BASE_URL = `https://main-image-5mua7tasea-nw.a.run.app`;
 
 // Development
-const BASE_URL_DEV = `http://localhost:8081`;
+const BASE_URL_DEV = `http://localhost:8080`;
 
 export const scrapeReviews = (id: string): string => {
 	const baseUrl = isDevMode() ? BASE_URL_DEV : BASE_URL;
