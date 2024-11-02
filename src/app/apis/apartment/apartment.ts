@@ -4,7 +4,7 @@ import { isDevMode } from '@angular/core';
 const BASE_URL = `https://main-image-5mua7tasea-nw.a.run.app`;
 
 // Development
-const BASE_URL_DEV = `http://localhost:8080`;
+const BASE_URL_DEV = `http://localhost:8081	`;
 
 export const getApartments = (): string => {
 	const baseUrl = isDevMode() ? BASE_URL_DEV : BASE_URL;
